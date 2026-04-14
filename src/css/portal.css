@@ -1,0 +1,569 @@
+/**
+ * portal.css — TRACA Portal v1.0
+ * Styles pour la page d'accueil (Portail).
+ * SNAPSHOT v1.0 — Version précédente disponible dans Git / commentaires ci-dessous.
+ */
+
+/* ─────────────────────────────────
+   HEADER
+───────────────────────────────── */
+.header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: clamp(4rem, 15vw, 8rem) 1.5rem clamp(2rem, 5vw, 4rem);
+    text-align: center;
+}
+
+.header-eyebrow {
+    font-family: var(--font-heading);
+    color: var(--gold-dim);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.header-title {
+    margin: 1.5rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-logo-img {
+    height: clamp(60px, 15vw, 120px);
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 30px rgba(212, 168, 83, 0.4));
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.header-subtitle {
+    font-family: var(--font-body);
+    font-style: italic;
+    color: var(--gold-dim);
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    max-width: 600px;
+}
+
+/* ─────────────────────────────────
+   SECTION DIVIDERS
+───────────────────────────────── */
+.section-label-wrap {
+    position: relative;
+    z-index: 10;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.section-divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(212,168,83,0.3), transparent);
+}
+
+.section-divider-text {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    white-space: nowrap;
+    opacity: 0.7;
+}
+
+/* ─────────────────────────────────
+   GRIDS
+───────────────────────────────── */
+.destinations {
+    position: relative;
+    z-index: 10;
+    padding: 0 2rem 4rem;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+/* Grille hero : carte pleine largeur */
+.destinations--hero {
+    display: block;
+}
+
+/* Grille informative : 2 colonnes */
+.destinations--grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+    gap: 2rem;
+    padding-bottom: 6rem;
+}
+
+/* ─────────────────────────────────
+   CARDS
+───────────────────────────────── */
+.destination-card {
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid rgba(212, 168, 83, 0.1);
+    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    text-decoration: none;
+    display: block;
+    aspect-ratio: 16/11;
+}
+
+/* Hero card : plus haute et plus cinématographique */
+.destination-card--hero {
+    aspect-ratio: 21/9;
+    border-color: rgba(212, 168, 83, 0.25);
+}
+
+.card-badge {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 3;
+    font-family: var(--font-heading);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #1a110a;
+    background: var(--gold);
+    padding: 5px 12px;
+    border-radius: 2px;
+}
+
+.card-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.6) grayscale(20%);
+    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10, 10, 9, 0.92) 0%, transparent 60%);
+    z-index: 1;
+}
+
+.card-content {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.card-location {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.8rem;
+}
+
+.card-title {
+    font-family: var(--font-heading);
+    font-size: 2.4rem;
+    line-height: 1.1;
+    color: var(--gold);
+    margin-bottom: 1rem;
+}
+
+/* Hero card : titre plus grand */
+.destination-card--hero .card-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+}
+
+.card-era {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 1rem;
+    color: #999;
+}
+
+.card-desc {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: rgba(200, 180, 150, 0.8);
+    margin-top: 0.8rem;
+    max-width: 500px;
+    line-height: 1.6;
+}
+
+.card-enter {
+    margin-top: 2rem;
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s ease;
+}
+
+.destination-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--gold-dim);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+}
+
+.destination-card--hero:hover {
+    transform: translateY(-4px);
+}
+
+.destination-card:hover .card-bg {
+    transform: scale(1.04);
+    filter: brightness(0.85) grayscale(0%);
+}
+
+.destination-card:hover .card-enter {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ─────────────────────────────────
+   FOOTER
+───────────────────────────────── */
+.footer {
+    position: relative;
+    z-index: 10;
+    padding: 4rem 2rem 5rem;
+    text-align: center;
+}
+
+.footer-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.footer-logo {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    opacity: 0.5;
+    filter: grayscale(30%);
+    transition: opacity 0.3s;
+}
+
+.footer-logo:hover {
+    opacity: 0.8;
+}
+
+.footer-name {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    opacity: 0.6;
+    margin: 0;
+}
+
+.footer-copy {
+    font-family: var(--font-heading);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: rgba(212, 168, 83, 0.35);
+    margin: 0;
+}
+
+.footer-version {
+    color: rgba(212, 168, 83, 0.5);
+    font-style: italic;
+}
+
+.footer-credits-btn {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    background: transparent;
+    border: 1px solid rgba(212, 168, 83, 0.2);
+    padding: 6px 18px;
+    border-radius: 2px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: all 0.3s;
+    margin-top: 0.4rem;
+}
+
+.footer-credits-btn:hover {
+    opacity: 1;
+    border-color: rgba(212, 168, 83, 0.5);
+    background: rgba(212, 168, 83, 0.05);
+}
+
+/* ─────────────────────────────────
+   MODAL CRÉDITS
+───────────────────────────────── */
+.credits-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(5, 3, 2, 0.88);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.credits-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.credits-modal {
+    position: relative;
+    background: rgba(20, 13, 8, 0.95);
+    border: 1px solid rgba(212, 168, 83, 0.2);
+    border-radius: 4px;
+    padding: 3rem 3.5rem;
+    max-width: 520px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    transform: translateY(20px);
+    transition: transform 0.4s ease;
+}
+
+.credits-overlay.active .credits-modal {
+    transform: translateY(0);
+}
+
+.credits-close {
+    position: absolute;
+    top: 1rem;
+    right: 1.2rem;
+    background: transparent;
+    border: none;
+    color: rgba(212, 168, 83, 0.4);
+    font-size: 1.2rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.credits-close:hover { color: var(--gold); }
+
+.credits-title {
+    font-family: var(--font-heading);
+    color: var(--gold);
+    font-size: 1.6rem;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.8rem;
+}
+
+.credits-orn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    color: rgba(212, 168, 83, 0.4);
+    font-size: 0.75rem;
+}
+
+.credits-orn-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(212, 168, 83, 0.2);
+}
+
+.credits-person {
+    margin-bottom: 1.5rem;
+}
+
+.credits-name {
+    font-family: var(--font-heading);
+    color: var(--gold);
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.4rem;
+}
+
+.credits-roles {
+    font-family: var(--font-body);
+    font-style: italic;
+    color: rgba(212, 168, 83, 0.65);
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+.credits-sep {
+    border: none;
+    border-top: 1px solid rgba(212, 168, 83, 0.15);
+    margin: 1.5rem 0;
+}
+
+.credits-footer {
+    font-family: var(--font-heading);
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: rgba(212, 168, 83, 0.3);
+    margin-top: 2rem;
+}
+
+/* ─────────────────────────────────
+   BACKGROUND DECORATION
+───────────────────────────────── */
+.bg-decoration {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(circle at 50% -20%, rgba(212, 168, 83, 0.08), transparent 70%);
+}
+
+/* ─────────────────────────────────
+   RESPONSIVE
+───────────────────────────────── */
+/* ─────────────────────────────────
+   RESPONSIVE — TABLETTE (< 900px)
+───────────────────────────────── */
+@media (max-width: 900px) {
+    .header {
+        padding: clamp(3rem, 10vw, 5rem) 1rem clamp(1.5rem, 4vw, 3rem);
+    }
+    .header-title {
+        font-size: clamp(3rem, 18vw, 7rem);
+        letter-spacing: 0.18em;
+    }
+    .destinations--grid {
+        gap: 2rem;
+    }
+}
+
+/* ─────────────────────────────────
+   RESPONSIVE — MOBILE (< 640px)
+───────────────────────────────── */
+@media (max-width: 640px) {
+    .header {
+        padding: 3.5rem 1rem 1.5rem;
+    }
+    .header-eyebrow {
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+    }
+    .header-title {
+        font-size: clamp(2.8rem, 20vw, 5rem);
+        letter-spacing: 0.12em;
+        margin: 1rem 0;
+    }
+    .header-subtitle {
+        font-size: 1rem;
+    }
+
+    /* Sections */
+    .section-label-wrap { padding: 0 1rem; }
+    .section-divider { gap: 0.8rem; }
+    .section-divider-text {
+        font-size: 0.5rem;
+        letter-spacing: 0.12em;
+    }
+
+    /* Grilles */
+    .destinations {
+        padding: 0 1rem 3rem;
+    }
+    .destinations--grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    /* Cards */
+    .destination-card {
+        aspect-ratio: 4/3;
+    }
+    .destination-card--hero {
+        aspect-ratio: 4/3;
+    }
+    .card-content {
+        padding: 1.2rem 1.4rem;
+    }
+    .card-title {
+        font-size: 1.6rem;
+        margin-bottom: 0.5rem;
+    }
+    .destination-card--hero .card-title {
+        font-size: 1.8rem;
+    }
+    .card-desc {
+        font-size: 0.85rem;
+        margin-top: 0.4rem;
+    }
+    .card-enter {
+        margin-top: 1rem;
+        font-size: 0.65rem;
+    }
+    .card-badge {
+        font-size: 0.55rem;
+        padding: 4px 10px;
+    }
+
+    /* Hover -> toucher : afficher l'enter directement */
+    .card-enter {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Footer */
+    .footer { padding: 3rem 1rem 4rem; }
+    .footer-logo { width: 40px; height: 40px; }
+    .footer-name { font-size: 0.6rem; }
+    /* Bouton crédits : target tactile min 44px */
+    .footer-credits-btn {
+        padding: 10px 20px;
+        font-size: 0.6rem;
+    }
+
+    /* Modal crédits mobile */
+    .credits-modal {
+        padding: 2rem 1.2rem;
+        max-width: 95vw;
+    }
+    .credits-title { font-size: 1.3rem; }
+    .credits-name { font-size: 1rem; }
+    .credits-roles { font-size: 0.82rem; }
+}
+
+/* ─────────────────────────────────
+   RESPONSIVE — TRÈS PETIT (< 380px)
+───────────────────────────────── */
+@media (max-width: 380px) {
+    .header-title { font-size: 2.5rem; }
+    .card-title { font-size: 1.3rem; }
+    .destination-card--hero .card-title { font-size: 1.5rem; }
+}
+

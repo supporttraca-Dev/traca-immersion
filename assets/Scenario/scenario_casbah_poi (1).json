@@ -1,0 +1,155 @@
+{
+  "metadata": {
+    "exportedAt": "2026-04-13T21:57:01.890Z",
+    "description": "Export Static Editor Casbah V10",
+    "version": "10.0"
+  },
+  "settings": {
+    "startCam": {
+      "az": 1.5856460275171018,
+      "pol": 1.3762056082747058
+    }
+  },
+  "pois": [
+    {
+      "id": "poi_ain_sebaa",
+      "position": {
+        "x": 75.11435879621929,
+        "y": -73.5111009784146,
+        "z": -487.98100573597793
+      },
+      "audio": "narration/narrations.mp3",
+      "poiType": "object",
+      "timeMode": "day",
+      "replicas": [],
+      "_replicaIndex": 0,
+      "content": {
+        "fr": {
+          "title": "عين السبع",
+          "description": "Cette porte de villa à Aïn Sebaâ est une pièce unique issue de l’artisanat traditionnel. Fabriquée en bois robuste avec des détails en fer forgé, elle incarne l’identité et l’âme de la maison. Elle mêle modernité et tradition, offrant intimité et annonçant une nouvelle histoire à chaque visiteur.",
+          "transcript": "في عين السبع، هاد الباب د الفيلّا عندو حكاية خاصة بيه. تصاوب بالحرفة من خشب قوي ومعاه تفاصيل من حديد مخدومين بالدقة، مستوحي من الصناعة التقليدية. كل نقشة فيه خدمة وكل دورة معمولة باليد، باش يخرج باب فريد وماكاينش كيفو.\n\nماشي غير مدخل، هادا بصح هوية الدار. كيحفظ الخصوصية وكيعطي من اللول فكرة على روح المكان. جامع بين العصري والتقليدي بطريقة متوازنة وزينة. هنا كي كتدخل من الباب، كأنك بديتي حكاية جديدة."
+        },
+        "en": {
+          "title": "عين السبع",
+          "description": "Traditional handcrafted villa door combining wood and forged iron, representing identity, privacy and the beginning of a new story.",
+          "transcript": ""
+        },
+        "ar": {
+          "title": "عين السبع",
+          "description": "",
+          "transcript": "في عين السبع، هاد الباب د الفيلّا عندو حكاية خاصة بيه..."
+        }
+      }
+    },
+
+    {
+      "id": "poi_fawara",
+      "position": {
+        "x": -356.32605921840184,
+        "y": -350.3443533765454,
+        "z": 3.6971606671478394
+      },
+      "audio": "narration/narrations FAWARA.mp3",
+      "poiType": "object",
+      "timeMode": "day",
+      "replicas": [],
+      "_replicaIndex": 0,
+      "content": {
+        "fr": {
+          "title": "فوارة",
+          "description": "La fwāra est le cœur battant de la maison. Fontaine en marbre et zellige, elle apporte fraîcheur et sérénité. Son murmure apaise l’esprit et rassemble la famille.",
+          "transcript": "وسط الدار، كاين قلب ينبض بالحياة.. هي الفوارة.\n\nمحطوطة تما في نص الباتيو..."
+        },
+        "en": {
+          "title": "فوارة",
+          "description": "Central fountain bringing calm, freshness and family gathering.",
+          "transcript": ""
+        },
+        "ar": {
+          "title": "فوارة",
+          "description": "",
+          "transcript": "وسط الدار، كاين قلب ينبض بالحياة.. هي الفوارة."
+        }
+      }
+    },
+
+    {
+      "id": "poi_zahra",
+      "position": {
+        "x": -251.55933693635822,
+        "y": -264.9734933434627,
+        "z": -340.91325525149335
+      },
+      "audio": "",
+      "poiType": "character",
+      "timeMode": "night",
+      "replicas": [
+        {
+          "audio": "expression/zahra-replique-01.mp3",
+          "description": "La porte par laquelle te vient le vent, bouche-la et tu te reposeras.\n\nCoupe la source du problème à la racine pour retrouver la paix.",
+          "transcript": "الباب لي يجيك منو الريح سدو و ستريح"
+        },
+        {
+          "audio": "expression/zahra-replique-02.mp3",
+          "description": "Celui que la chance trahit dit : \"La sorcellerie m'a trahi.\"\n\nCelui qui manque de chance accuse le mauvais œil au lieu de se remettre en question.",
+          "transcript": "لي خانو الزهر يقول السحور بيا"
+        }
+      ],
+      "_replicaIndex": 0,
+      "content": {
+        "fr": {
+          "title": "زُهرة",
+          "description": "",
+          "transcript": ""
+        },
+        "en": {
+          "title": "Zahra",
+          "description": "",
+          "transcript": ""
+        },
+        "ar": {
+          "title": "زُهرة",
+          "description": "",
+          "transcript": ""
+        }
+      }
+    },
+
+    {
+      "id": "poi_aicha",
+      "position": {
+        "x": -121.33867479629063,
+        "y": -292.79912179175983,
+        "z": -386.4468992940637
+      },
+      "audio": "",
+      "poiType": "character",
+      "timeMode": "night",
+      "replicas": [
+        {
+          "audio": "expression/aicha-replique-01.mp3",
+          "description": "C'est quelle chorba qui t'a brûlé les lèvres ?\n\nPourquoi te sens-tu concerné par cette affaire ?",
+          "transcript": "واش من شربة حرقتلك شواربك"
+        }
+      ],
+      "_replicaIndex": 0,
+      "content": {
+        "fr": {
+          "title": "عائشة",
+          "description": "",
+          "transcript": ""
+        },
+        "en": {
+          "title": "Aicha",
+          "description": "",
+          "transcript": ""
+        },
+        "ar": {
+          "title": "عائشة",
+          "description": "",
+          "transcript": ""
+        }
+      }
+    }
+  ]
+}

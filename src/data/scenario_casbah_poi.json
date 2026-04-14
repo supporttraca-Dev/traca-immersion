@@ -1,0 +1,256 @@
+{
+    "metadata": {
+        "exportedAt": "2026-04-13T21:57:01.890Z",
+        "description": "Export Static Editor Casbah V10",
+        "version": "10.0"
+    },
+    "settings": {
+        "startCam": {
+            "az": 1.5856460275171018,
+            "pol": 1.3762056082747058
+        }
+    },
+    "pois": [
+        {
+            "id": "poi_1776113034660",
+            "position": {
+                "x": 75.11435879621929,
+                "y": -73.5111009784146,
+                "z": -487.98100573597793
+            },
+            "audio": "narration/narrations.mp3",
+            "poiType": "object",
+            "timeMode": "day",
+            "replicas": [],
+            "_replicaIndex": 0,
+            "content": {
+                "fr": {
+                    "title": "عين السبع",
+                    "description": "في عين السبع، هاد الباب د الفيلّا عندو حكاية خاصة بيه. تصاوب بالحرفة من خشب قوي ومعاه تفاصيل من حديد مخدومين بالدقة، مستوحي من الصناعة التقليدية. كل نقشة فيه خدمة وكل دورة معمولة باليد، باش يخرج باب فريد وماكاينش كيفو.\n\nماشي غير مدخل، هادا بصح هوية الدار. كيحفظ الخصوصية وكيعطي من اللول فكرة على روح المكان. جامع بين العصري والتقليدي بطريقة متوازنة وزينة. هنا كي كتدخل من الباب، كأنك بديتي حكاية جديدة."
+                },
+                "en": {
+                    "title": "عين السبع",
+                    "description": "في عين السبع، هاد الباب د الفيلّا عندو حكاية خاصة بيه. تصاوب بالحرفة من خشب قوي ومعاه تفاصيل من حديد مخدومين بالدقة، مستوحي من الصناعة التقليدية. كل نقشة فيه خدمة وكل دورة معمولة باليد، باش يخرج باب فريد وماكاينش كيفو.\n\nماشي غير مدخل، هادا بصح هوية الدار. كيحفظ الخصوصية وكيعطي من اللول فكرة على روح المكان. جامع بين العصري والتقليدي بطريقة متوازنة وزينة. هنا كي كتدخل من الباب، كأنك بديتي حكاية جديدة."
+                },
+                "ar": {
+                    "title": "عين السبع",
+                    "description": "في عين السبع، هاد الباب د الفيلّا عندو حكاية خاصة بيه. تصاوب بالحرفة من خشب قوي ومعاه تفاصيل من حديد مخدومين بالدقة، مستوحي من الصناعة التقليدية. كل نقشة فيه خدمة وكل دورة معمولة باليد، باش يخرج باب فريد وماكاينش كيفو.\n\nماشي غير مدخل، هادا بصح هوية الدار. كيحفظ الخصوصية وكيعطي من اللول فكرة على روح المكان. جامع بين العصري والتقليدي بطريقة متوازنة وزينة. هنا كي كتدخل من الباب، كأنك بديتي حكاية جديدة."
+                }
+            }
+        },
+        {
+            "id": "poi_1776117082770",
+            "position": {
+                "x": -251.55933693635822,
+                "y": -264.9734933434627,
+                "z": -340.91325525149335
+            },
+            "audio": "",
+            "poiType": "character",
+            "timeMode": "night",
+            "replicas": [
+                {
+                    "audio": "expression/zahra-replique-01.mp3",
+                    "description": "La porte par laquelle te vient le vent, bouche-la et tu te reposeras. »\nCoupe la source du problème à la racine pour retrouver la paix.",
+                    "transcript": "الباب لي يجيك منو الريح سدو و ستريح\n"
+                }
+            ],
+            "_replicaIndex": 0,
+            "content": {
+                "fr": {
+                    "title": "زُهرة",
+                    "description": "",
+                    "transcript": ""
+                },
+                "en": {
+                    "title": "زُهرة",
+                    "description": "",
+                    "transcript": ""
+                },
+                "ar": {
+                    "title": "زُهرة",
+                    "description": "",
+                    "transcript": ""
+                }
+            }
+        },
+        {
+            "id": "poi_1776117130315",
+            "position": {
+                "x": -251.55933693635822,
+                "y": -264.9734933434627,
+                "z": -340.91325525149335
+            },
+            "audio": "",
+            "poiType": "character",
+            "timeMode": "night",
+            "replicas": [
+                {
+                    "audio": "expression/zahra-replique-01.mp3",
+                    "description": "La porte par laquelle te vient le vent, bouche-la et tu te reposeras. »\nCoupe la source du problème à la racine pour retrouver la paix.",
+                    "transcript": "الباب لي يجيك منو الريح سدو و ستريح\n"
+                },
+                {
+                    "audio": "expression/zahra-replique-02.mp3",
+                    "description": "Celui que la chance trahit dit : \"La sorcellerie (le mauvais sort) m'a trahi.\n\nCelui qui manque de chance ou de compétence accuse le mauvais œil plutôt que de se remettre en question.",
+                    "transcript": "لي خانو الزهر يقول السحور بيا\n"
+                }
+            ],
+            "_replicaIndex": 0,
+            "content": {
+                "fr": {
+                    "title": "زُهرة",
+                    "description": "",
+                    "transcript": ""
+                },
+                "en": {
+                    "title": "زُهرة",
+                    "description": "",
+                    "transcript": ""
+                },
+                "ar": {
+                    "title": "زُهرة",
+                    "description": "",
+                    "transcript": ""
+                }
+            }
+        },
+        {
+            "id": "poi_1776117132170",
+            "position": {
+                "x": -251.55933693635822,
+                "y": -264.9734933434627,
+                "z": -340.91325525149335
+            },
+            "audio": "",
+            "poiType": "character",
+            "timeMode": "night",
+            "replicas": [
+                {
+                    "audio": "expression/zahra-replique-01.mp3",
+                    "description": "La porte par laquelle te vient le vent, bouche-la et tu te reposeras. »\nCoupe la source du problème à la racine pour retrouver la paix.",
+                    "transcript": "الباب لي يجيك منو الريح سدو و ستريح\n"
+                },
+                {
+                    "audio": "expression/zahra-replique-02.mp3",
+                    "description": "Celui que la chance trahit dit : \"La sorcellerie (le mauvais sort) m'a trahi.\n\nCelui qui manque de chance ou de compétence accuse le mauvais œil plutôt que de se remettre en question.",
+                    "transcript": "لي خانو الزهر يقول السحور بيا\n"
+                }
+            ],
+            "_replicaIndex": 0,
+            "content": {
+                "fr": {
+                    "title": "زُهرة",
+                    "description": "",
+                    "transcript": ""
+                },
+                "en": {
+                    "title": "زُهرة",
+                    "description": "",
+                    "transcript": ""
+                },
+                "ar": {
+                    "title": "زُهرة",
+                    "description": "",
+                    "transcript": ""
+                }
+            }
+        },
+        {
+            "id": "poi_1776117194706",
+            "position": {
+                "x": -121.33867479629063,
+                "y": -292.79912179175983,
+                "z": -386.4468992940637
+            },
+            "audio": "",
+            "poiType": "character",
+            "timeMode": "night",
+            "replicas": [
+                {
+                    "audio": "expression/zahra-replique-02.mp3",
+                    "description": "C'est quelle chorba (soupe algérienne) qui t'a brûlé les lèvres ? \n\nPour quelle raison vous estimez-vous partie prenante de cette affaire ",
+                    "transcript": "واش من شربة حرقتلك شواربك"
+                }
+            ],
+            "_replicaIndex": 0,
+            "content": {
+                "fr": {
+                    "title": "عائشة",
+                    "description": "",
+                    "transcript": ""
+                },
+                "en": {
+                    "title": "عائشة",
+                    "description": "",
+                    "transcript": ""
+                },
+                "ar": {
+                    "title": "عائشة",
+                    "description": "",
+                    "transcript": ""
+                }
+            }
+        },
+        {
+            "id": "poi_1776117348606",
+            "position": {
+                "x": -356.32605921840184,
+                "y": -350.3443533765454,
+                "z": 3.6971606671478394
+            },
+            "audio": "narration/narrations FAWARA.mp3",
+            "poiType": "object",
+            "timeMode": "day",
+            "replicas": [],
+            "_replicaIndex": 0,
+            "content": {
+                "fr": {
+                    "title": "فوارة",
+                    "description": "La fwāra est décrite comme le cœur battant de la maison, une fontaine en marbre et zellige qui apporte fraîcheur et sérénité. Son murmure apaise l'esprit et rassemble la famille, symbolisant la noblesse et l'élégance des demeures d'autrefois.",
+                    "transcript": "وسط الدار، كاين قلب ينبض بالحياة.. هي الفوارة.\n\nمحطوطة تما في نص الباتيو، مزينة بالزليج والرخام، ومسقية بالهوا البارد. صوت الما ديالها يغلب على كلش، يعطيك راحة البال ويخلي القعدة وسط العيلة عندها بنة خاصة.\n\nالفوارة ماشي غير ديكور، هي روح الدار اللي تجمعنا وتفكرنا في زمان الخير والهمة."
+                },
+                "en": {
+                    "title": "فوارة",
+                    "description": "La fwāra est décrite comme le cœur battant de la maison, une fontaine en marbre et zellige qui apporte fraîcheur et sérénité. Son murmure apaise l'esprit et rassemble la famille, symbolisant la noblesse et l'élégance des demeures d'autrefois.",
+                    "transcript": "وسط الدار، كاين قلب ينبض بالحياة.. هي الفوارة.\n\nمحطوطة تما في نص الباتيو، مزينة بالزليج والرخام، ومسقية بالهوا البارد. صوت الما ديالها يغلب على كلش، يعطيك راحة البال ويخلي القعدة وسط العيلة عندها بنة خاصة.\n\nالفوارة ماشي غير ديكور، هي روح الدار اللي تجمعنا وتفكرنا في زمان الخير والهمة."
+                },
+                "ar": {
+                    "title": "فوارة",
+                    "description": "La fwāra est décrite comme le cœur battant de la maison, une fontaine en marbre et zellige qui apporte fraîcheur et sérénité. Son murmure apaise l'esprit et rassemble la famille, symbolisant la noblesse et l'élégance des demeures d'autrefois.",
+                    "transcript": "وسط الدار، كاين قلب ينبض بالحياة.. هي الفوارة.\n\nمحطوطة تما في نص الباتيو، مزينة بالزليج والرخام، ومسقية بالهوا البارد. صوت الما ديالها يغلب على كلش، يعطيك راحة البال ويخلي القعدة وسط العيلة عندها بنة خاصة.\n\nالفوارة ماشي غير ديكور، هي روح الدار اللي تجمعنا وتفكرنا في زمان الخير والهمة."
+                }
+            }
+        },
+        {
+            "id": "poi_1776117416458",
+            "position": {
+                "x": 68.96572020023638,
+                "y": -84.49111644796352,
+                "z": -487.1299002542149
+            },
+            "audio": "narration/narrations.mp3",
+            "poiType": "object",
+            "timeMode": "day",
+            "replicas": [],
+            "_replicaIndex": 0,
+            "content": {
+                "fr": {
+                    "title": "عين السبع",
+                    "description": "Cette porte de villa à Aïn Sebaâ est décrite comme une pièce unique, forgée par l'artisanat traditionnel à partir de bois robuste et de fer forgé précis. Plus qu'une simple entrée, elle représente l'identité et l'âme de la maison, mêlant modernité et tradition pour offrir une promesse d'intimité et le début d'une nouvelle histoire à quiconque la franchit.",
+                    "transcript": "في عين السبع، هاد الباب د الفيلّا عندو حكاية خاصة بيه. تصاوب بالحرفة من خشب قوي ومعاه تفاصيل من حديد مخدومين بالدقة، مستوحي من الصناعة التقليدية. كل نقشة فيه خدمة وكل دورة معمولة باليد، باش يخرج باب فريد وماكاينش كيفو.\n\nماشي غير مدخل، هادا بصح هوية الدار. كيحفظ الخصوصية وكيعطي من اللول فكرة على روح المكان. جامع بين العصري والتقليدي بطريقة متوازنة وزينة. هنا كي كتدخل من الباب، كأنك بديتي حكاية جديدة."
+                },
+                "en": {
+                    "title": "عين السبع",
+                    "description": "Cette porte de villa à Aïn Sebaâ est décrite comme une pièce unique, forgée par l'artisanat traditionnel à partir de bois robuste et de fer forgé précis. Plus qu'une simple entrée, elle représente l'identité et l'âme de la maison, mêlant modernité et tradition pour offrir une promesse d'intimité et le début d'une nouvelle histoire à quiconque la franchit.",
+                    "transcript": "في عين السبع، هاد الباب د الفيلّا عندو حكاية خاصة بيه. تصاوب بالحرفة من خشب قوي ومعاه تفاصيل من حديد مخدومين بالدقة، مستوحي من الصناعة التقليدية. كل نقشة فيه خدمة وكل دورة معمولة باليد، باش يخرج باب فريد وماكاينش كيفو.\n\nماشي غير مدخل، هادا بصح هوية الدار. كيحفظ الخصوصية وكيعطي من اللول فكرة على روح المكان. جامع بين العصري والتقليدي بطريقة متوازنة وزينة. هنا كي كتدخل من الباب، كأنك بديتي حكاية جديدة."
+                },
+                "ar": {
+                    "title": "عين السبع",
+                    "description": "Cette porte de villa à Aïn Sebaâ est décrite comme une pièce unique, forgée par l'artisanat traditionnel à partir de bois robuste et de fer forgé précis. Plus qu'une simple entrée, elle représente l'identité et l'âme de la maison, mêlant modernité et tradition pour offrir une promesse d'intimité et le début d'une nouvelle histoire à quiconque la franchit.",
+                    "transcript": "في عين السبع، هاد الباب د الفيلّا عندو حكاية خاصة بيه. تصاوب بالحرفة من خشب قوي ومعاه تفاصيل من حديد مخدومين بالدقة، مستوحي من الصناعة التقليدية. كل نقشة فيه خدمة وكل دورة معمولة باليد، باش يخرج باب فريد وماكاينش كيفو.\n\nماشي غير مدخل، هادا بصح هوية الدار. كيحفظ الخصوصية وكيعطي من اللول فكرة على روح المكان. جامع بين العصري والتقليدي بطريقة متوازنة وزينة. هنا كي كتدخل من الباب، كأنك بديتي حكاية جديدة."
+                }
+            }
+        }
+    ]
+}

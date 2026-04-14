@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRACA · Patrimoine Algérien &amp; Immersion 3D</title>
+    <meta name="description" content="TRACA — Explorez le patrimoine algérien à travers des expériences 3D immersives. La Casbah d'Alger, le Tombeau de la Chrétienne et la Synagogue d'Oran.">
+    
+    <link rel="stylesheet" href="src/css/base.css">
+    <link rel="stylesheet" href="src/css/portal.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/webp" href="assets/images/logo-traca-symbole.webp">
+</head>
+<body>
+
+    <header class="header">
+        <p class="header-eyebrow">Algérie · Patrimoine &amp; Mémoire Numérique</p>
+        <!-- Logo TRACA en image (blanc) — remplace le texte typographié -->
+        <h1 class="header-title">
+            <img src="assets/images/logo-traca-symbole.webp"
+                 alt="TRACA — Patrimoine Algérien"
+                 class="header-logo-img">
+            <span class="sr-only">TRACA</span>
+        </h1>
+        <p class="header-subtitle">Mémoire Numérique · Expériences 3D Immersives</p>
+    </header>
+
+
+    <main>
+
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 1 — EXPÉRIENCE NARRATIVE & IMMERSIVE
+        ════════════════════════════════════════════════════════ -->
+        <section class="section-label-wrap">
+            <div class="section-divider">
+                <div class="section-divider-line"></div>
+                <span class="section-divider-text">Expérience Narrative &amp; Immersive</span>
+                <div class="section-divider-line"></div>
+            </div>
+        </section>
+
+        <div class="destinations destinations--hero">
+            <a href="experiences/casbah/index.html" class="destination-card destination-card--hero" id="card-casbah">
+                <div class="card-bg" style="background-image: url('assets/images/casbah_thumb.jpg.png');"></div>
+                <div class="card-overlay"></div>
+                <div class="card-badge">⭐ Expérience Phare</div>
+                <div class="card-content">
+                    <span class="card-location">Alger · Algérie</span>
+                    <h2 class="card-title">La Casbah<br>d'Alger</h2>
+                    <span class="card-era">XVI<sup>e</sup> siècle — Empire Ottoman</span>
+                    <p class="card-desc">Une narration immersive à 360° avec personnages, voix et musique d'époque.</p>
+                    <div class="card-enter">Entrer dans l'immersion →</div>
+                </div>
+            </a>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 2 — EXPÉRIENCES INTERACTIVES & INFORMATIVES
+        ════════════════════════════════════════════════════════ -->
+        <section class="section-label-wrap" style="margin-top: 3rem;">
+            <div class="section-divider">
+                <div class="section-divider-line"></div>
+                <span class="section-divider-text">Expériences Interactives &amp; Informatives</span>
+                <div class="section-divider-line"></div>
+            </div>
+        </section>
+
+        <div class="destinations destinations--grid">
+
+            <a href="experiences/tombeau/index.html" class="destination-card" id="card-tombeau">
+                <div class="card-bg" style="background-image: url('assets/images/thumb_tombeau.png');"></div>
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <span class="card-location">Tipaza · Algérie</span>
+                    <h2 class="card-title">Tombeau de la<br>Chrétienne</h2>
+                    <span class="card-era">I<sup>er</sup> siècle av. J.-C.</span>
+                    <div class="card-enter">Entrer dans l'immersion →</div>
+                </div>
+            </a>
+
+            <a href="experiences/synagogue/index.html" class="destination-card" id="card-synagogue">
+                <div class="card-bg" style="background-image: url('assets/images/thumb_synagogue.png');"></div>
+                <div class="card-overlay"></div>
+                <div class="card-content">
+                    <span class="card-location">Oran · Algérie</span>
+                    <h2 class="card-title">Grande Synagogue<br>d'Oran</h2>
+                    <span class="card-era">1879–1918</span>
+                    <div class="card-enter">Entrer dans l'immersion →</div>
+                </div>
+            </a>
+
+        </div>
+
+    </main>
+
+    <!-- ═══════════════════════════════════════════════════════
+         FOOTER
+    ════════════════════════════════════════════════════════ -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <img src="assets/images/logo-traca-symbole.webp" alt="Logo Traça" class="footer-logo">
+            <p class="footer-name">TRACA · PATRIMOINE ALGÉRIEN</p>
+            <p class="footer-copy">&copy; 2026 · <span class="footer-version">v1.0</span></p>
+            <button class="footer-credits-btn" id="btn-show-credits" onclick="document.getElementById('credits-overlay').classList.add('active')">
+                Crédits
+            </button>
+        </div>
+    </footer>
+
+    <div class="bg-decoration"></div>
+
+    <!-- ═══════════════════════════════════════════════════════
+         MODAL CRÉDITS
+    ════════════════════════════════════════════════════════ -->
+    <div id="credits-overlay" class="credits-overlay" role="dialog" aria-modal="true" aria-label="Crédits TRACA">
+        <div class="credits-modal">
+            <button class="credits-close" onclick="document.getElementById('credits-overlay').classList.remove('active')" aria-label="Fermer">✕</button>
+            
+            <h2 class="credits-title">Crédits</h2>
+            <div class="credits-orn">
+                <div class="credits-orn-line"></div>
+                <span>✦</span>
+                <div class="credits-orn-line"></div>
+            </div>
+
+            <div class="credits-person">
+                <p class="credits-name">Chehinez Fetteaka</p>
+                <p class="credits-roles">
+                    Fondatrice &nbsp;·&nbsp; Écriture &nbsp;·&nbsp; Recherche scientifique<br>
+                    Narration textuelle &nbsp;·&nbsp; Direction artistique
+                </p>
+            </div>
+
+            <hr class="credits-sep">
+
+            <div class="credits-person">
+                <p class="credits-name">Amir Dekik</p>
+                <p class="credits-roles">
+                    Développement technique &nbsp;·&nbsp; Direction artistique (Visuel)
+                </p>
+            </div>
+
+            <p class="credits-footer">TRACA · v1.0 · 2026</p>
+        </div>
+    </div>
+
+    <script>
+    // Fermer la modal par clic sur le fond
+    document.getElementById('credits-overlay').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('active');
+    });
+    // Fermer par Echap
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') document.getElementById('credits-overlay').classList.remove('active');
+    });
+    </script>
+
+</body>
+</html>

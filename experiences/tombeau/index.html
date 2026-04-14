@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kbor er Roumia — Mausolée Royal de Maurétanie · Immersion 3D</title>
+    <meta name="description"
+        content="Un voyage narratif et immersif au cœur du Tombeau de la Chrétienne, monument antique de la Maurétanie Césarienne.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/webp" href="../../assets/images/logo-traca-symbole.webp">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../src/css/base.css">
+    <link rel="stylesheet" href="../../src/css/experience.css">
+
+    <!-- Masque le bouton View/Edit du DirectorTool (logique préservée, bouton caché) -->
+    <style>
+        #d-switcher { display: none !important; }
+    </style>
+
+    <!-- CDN Scripts -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+</head>
+
+<body>
+
+    <!-- ── PARTICLES ─────────────────────────────────────────────── -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- ── INTRO OVERLAY ─────────────────────────────────────────── -->
+    <!-- ═══ LOADER (Design Dynamique Type Casbah) ═══ -->
+    <div id="c-loader">
+        <div class="c-loader-inner">
+            <!-- Logo TRACA — Agrandi -->
+            <img src="../../assets/images/logo-traca-symbole.webp" alt="Logo TRACA" class="c-loader-logo"
+                style="width:130px; height:130px; margin-bottom:2rem; object-fit:contain; opacity:0.8; filter:drop-shadow(0 0 20px rgba(231,186,128,0.4)); animation: pulse-logo 2.5s ease-in-out infinite;">
+
+            <!-- Titre et sous-titre pour contexte (Tombeau) -->
+            <p
+                style="font-family:'Cinzel', serif; font-size:1.5rem; color:#e7ba80; margin-bottom: 0.5rem; font-weight: 600;">
+                Tombeau de la Chrétienne</p>
+            <p
+                style="font-family:'Cormorant Garamond', serif; font-style:italic; font-size:1.1rem; color:rgba(231,186,128,0.8); margin-bottom: 1.5rem;">
+                Ier siècle av. J.-C.</p>
+
+            <!-- Barre de progression Casbah-style -->
+            <p class="c-loader-label" id="c-loader-label"
+                style="font-family:'Cinzel', serif; font-size:0.8rem; letter-spacing:0.15em; color:#99784e; margin-bottom:1.5rem; text-transform:uppercase;">
+                Chargement de l'environnement…</p>
+            <div class="c-loader-bar-wrap"
+                style="width:100%; height:2px; background:rgba(231,186,128,0.1); margin-bottom:0.5rem; overflow:hidden;">
+                <div id="c-loader-bar"
+                    style="width:100%; height:100%; background:linear-gradient(90deg, transparent, #e7ba80, transparent); background-size:200% 100%; transition:width 0.2s ease; animation:shimmer 1.5s infinite;">
+                </div>
+            </div>
+
+            <!-- Astuce casque -->
+            <p class="intro-hint" style="margin-top: 2rem;">
+                <span class="headphones-icon">🎧</span>
+                Mettez vos écouteurs pour une expérience optimale
+            </p>
+
+            <!-- Bouton Entrer -->
+            <button id="c-loader-enter"
+                style="margin-top:1.5rem; border:1px solid rgba(231,186,128,0.4); background:rgba(10,10,10,0.8); color:#e7ba80; padding:10px 24px; font-family:'Cinzel',serif; cursor:pointer; width: 100%; text-transform: uppercase;">
+                ✦ Entrer dans l'immersion
+            </button>
+        </div>
+    </div>
+
+
+    <!-- ── FIXED UI ───────────────────────────────────────────────── -->
+    <a href="../../index.html" class="back-btn">← Lieux</a>
+
+    <!-- Bouton Accueil / Landing (Haut Droite) -->
+    <button id="btn-hud-home" class="btn-hud-home" title="Retour au menu principal"
+        onclick="window.location.href='../../index.html'" style="opacity: 0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+    </button>
+
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+        <span id="progress-label">01 / 07</span>
+    </div>
+
+    <nav id="chapter-nav" aria-label="Navigation des chapitres">
+        <ul></ul>
+    </nav>
+
+    <button id="audio-toggle" title="Activer/désactiver le son">
+        <svg id="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18"
+            height="18">
+            <path d="M9 18V6l12-3v12" />
+            <circle cx="6" cy="18" r="3" />
+            <circle cx="18" cy="15" r="3" />
+        </svg>
+        <svg id="icon-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18"
+            height="18" style="display:none">
+            <line x1="1" y1="1" x2="23" y2="23" />
+            <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6" />
+            <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23" />
+        </svg>
+    </button>
+
+    <!-- ── AR Button (revealed at Ch7) ───────────────────────────── -->
+    <div id="ar-cta-wrapper" class="hidden">
+        <button id="ar-invoke-btn">
+            <span class="ar-btn-glyph">✦</span>
+            <span class="ar-btn-main">Invoquer le monument dans votre espace</span>
+            <span class="ar-btn-caption">Réalité Augmentée · WebXR &amp; Quick Look</span>
+        </button>
+        <p id="ar-no-support">
+            ⚠ La Réalité Augmentée nécessite Chrome sur Android ou Safari sur iOS.
+        </p>
+    </div>
+
+    <!-- ── 3D SCENE ───────────────────────────────────────────────── -->
+    <div id="scene-3d">
+        <div class="scene-vignette"></div>
+        <div class="scene-fog-top"></div>
+        <div class="scene-fog-bottom"></div>
+
+        <model-viewer id="mausoleum-model" src="../../assets/models/tombeau.glb" ar
+            ar-modes="webxr scene-viewer quick-look" camera-controls disable-zoom disable-pan touch-action="none"
+            camera-orbit="15deg 68deg 120%" camera-target="0m 0.3m 0m" field-of-view="30deg" exposure="0.8"
+            shadow-intensity="2" shadow-softness="0.9" environment-image="neutral" interpolation-decay="200"
+            alt="Kbor er Roumia — Mausolée Royal de Maurétanie — modèle 3D interactif">
+        </model-viewer>
+    </div>
+
+    <!-- ── STORY CHAPTERS ─────────────────────────────────────────── -->
+    <main id="story-container">
+
+        <!-- Ch 1 -->
+        <section class="chapter" data-chapter-id="ch1">
+            <div class="chapter-card chapter-card--left">
+                <div class="chapter-tag"><span class="chapter-num">01</span><span class="chapter-theme">L'Énigme</span>
+                </div>
+                <div class="chapter-ornament">⸻</div>
+                <h2 class="chapter-title">L'Énigme<br>de Pierre</h2>
+                <p class="chapter-text">Dressé majestueusement à 261 mètres d'altitude sur une colline dominant la
+                    plaine de la Mitidja, le <strong>Mausolée Royal de Maurétanie</strong> — improprement appelé Tombeau
+                    de la Chrétienne — est l'un des monuments les plus mystérieux et imposants de l'Afrique du Nord.</p>
+                <p class="chapter-text">Visible de loin par les navigateurs, il a traversé deux millénaires, bravant les
+                    séismes, les pillages et les assauts de l'histoire, gardant jalousement le secret de ses
+                    profondeurs.</p>
+            </div>
+        </section>
+
+        <!-- Ch 2 -->
+        <section class="chapter" data-chapter-id="ch2">
+            <div class="chapter-card chapter-card--right">
+                <div class="chapter-tag"><span class="chapter-num">02</span><span class="chapter-theme">Juba II</span>
+                </div>
+                <div class="chapter-ornament">⸻</div>
+                <h2 class="chapter-title">Le Roi<br>Savant</h2>
+                <p class="chapter-text">Bâti probablement vers le <strong>Ier siècle avant J.-C.</strong>, l'édifice est
+                    attribué au roi <strong>Juba II</strong> et à son épouse <strong>Cléopâtre Séléné II</strong>, fille
+                    de la célèbre Cléopâtre d'Égypte.</p>
+                <p class="chapter-text">L'architecture fusionne les traditions berbères locales, l'influence égyptienne
+                    et la rigueur gréco-romaine, créant une œuvre unique au monde.</p>
+            </div>
+        </section>
+
+        <!-- Ch 3 -->
+        <section class="chapter" data-chapter-id="ch3">
+            <div class="chapter-card chapter-card--left">
+                <div class="chapter-tag"><span class="chapter-num">03</span><span
+                        class="chapter-theme">Résistance</span></div>
+                <div class="chapter-ornament">⸻</div>
+                <h2 class="chapter-title">L'Assaut de<br>Salah Raïs</h2>
+                <p class="chapter-text">En <strong>1555</strong>, Salah Raïs, pacha d'Alger, tenta de détruire le
+                    monument à coups de canon pour en extraire d'éventuels trésors. La légende raconte que dès les
+                    premiers tirs, une nuée de frelons noirs géants sortit des pierres pour attaquer l'armée.</p>
+                <p class="chapter-text">Le mausolée porte encore les stigmates de ces bombardements sur sa face sud,
+                    témoins muets de sa résilience face à la cupidité humaine.</p>
+            </div>
+        </section>
+
+        <!-- Ch 4 -->
+        <section class="chapter" data-chapter-id="ch4">
+            <div class="chapter-card chapter-card--right">
+                <div class="chapter-tag"><span class="chapter-num">04</span><span class="chapter-theme">Le Mythe</span>
+                </div>
+                <div class="chapter-ornament">⸻</div>
+                <h2 class="chapter-title">Le Trésor<br>Volant</h2>
+                <p class="chapter-text">Les populations locales ont longtemps conté l'histoire d'un berger prisonnier en
+                    Europe, libéré par un magicien à condition d'allumer un feu devant le tombeau. Au contact de la
+                    fumée, les pierres se seraient ouvertes.</p>
+                <p class="chapter-text">Cette aura de mystère a valu au monument son nom de <em>Kbor er Roumia</em> — le
+                    tombeau de la femme étrangère — en référence aux fausses portes en forme de croix.</p>
+            </div>
+        </section>
+
+        <!-- Ch 5 -->
+        <section class="chapter" data-chapter-id="ch5">
+            <div class="chapter-card chapter-card--left">
+                <div class="chapter-tag"><span class="chapter-num">05</span><span
+                        class="chapter-theme">Architecture</span></div>
+                <div class="chapter-ornament">⸻</div>
+                <h2 class="chapter-title">L'Échelle<br>Cyclopéenne</h2>
+                <p class="chapter-text">L'ouvrage est un géant : environ <strong>60 mètres de diamètre</strong> et 32
+                    mètres de hauteur. Sa structure circulaire est ornée de 60 colonnes engagées à chapiteaux ioniques,
+                    surmontée d'un cône formé de gradins.</p>
+                <p class="chapter-text">Quatre portes monumentales font face aux points cardinaux, mais trois d'entre
+                    elles sont factices, destinées à tromper les pilleurs.</p>
+                <div class="chapter-stats">
+                    <div class="stat"><span class="stat-value">60 m</span><span class="stat-label">Diamètre</span></div>
+                    <div class="stat"><span class="stat-value">32 m</span><span class="stat-label">Hauteur</span></div>
+                    <div class="stat"><span class="stat-value">60</span><span class="stat-label">Colonnes</span></div>
+                    <div class="stat"><span class="stat-value">3</span><span class="stat-label">Fausses portes</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ch 6 -->
+        <section class="chapter" data-chapter-id="ch6">
+            <div class="chapter-card chapter-card--right">
+                <div class="chapter-tag"><span class="chapter-num">06</span><span
+                        class="chapter-theme">Labyrinthe</span></div>
+                <div class="chapter-ornament">⸻</div>
+                <h2 class="chapter-title">Le Chemin<br>des Ténèbres</h2>
+                <p class="chapter-text">Ce n'est qu'en <strong>1865</strong> que l'archéologue Adrien Berbrugger
+                    découvrit l'entrée réelle. Un tunnel étroit et oblique mène à une galerie circulaire de 150 mètres
+                    de long, ornée de bas-reliefs représentant des lions et des panthères.</p>
+                <p class="chapter-text">Ce couloir labyrinthique débouche sur deux chambres funéraires centrales,
+                    plongées dans l'obscurité totale et le silence absolu.</p>
+            </div>
+        </section>
+
+        <!-- Ch 7 — Final -->
+        <section class="chapter chapter--final" id="final-step" data-chapter-id="ch7">
+            <div class="chapter-card chapter-card--center">
+                <div class="chapter-tag" style="justify-content:center"><span class="chapter-num">07</span><span
+                        class="chapter-theme">Héritage</span></div>
+                <div class="chapter-ornament" style="text-align:center">⸻</div>
+                <h2 class="chapter-title">L'Héritage<br>Éternel</h2>
+                <p class="chapter-text">Kbor er Roumia est plus qu'un tombeau ; c'est un trait d'union entre les
+                    civilisations méditerranéennes et le génie numide. Il reste le gardien silencieux d'une Algérie
+                    millénaire.</p>
+                <p class="chapter-text" style="font-style:italic;opacity:0.7;">Vivez l'histoire à travers vos propres
+                    yeux.</p>
+                <div class="chapter-credits">TRACA · Patrimoine Algérien &amp; Mémoire Numérique</div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ── AUDIO ──────────────────────────────────────────────────── -->
+    <audio id="ambient-audio" loop preload="none">
+        <source src="../../assets/audio/tombeau/ambient.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="narration-ch1" preload="none">
+        <source src="../../assets/audio/tombeau/narration-ch1.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="narration-ch2" preload="none">
+        <source src="../../assets/audio/tombeau/narration-ch2.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="narration-ch3" preload="none">
+        <source src="../../assets/audio/tombeau/narration-ch3.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="narration-ch4" preload="none">
+        <source src="../../assets/audio/tombeau/narration-ch4.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="narration-ch5" preload="none">
+        <source src="../../assets/audio/tombeau/narration-ch5.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="narration-ch6" preload="none">
+        <source src="../../assets/audio/tombeau/narration-ch6.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="narration-ch7" preload="none">
+        <source src="../../assets/audio/tombeau/narration-ch7.mp3" type="audio/mpeg">
+    </audio>
+
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>

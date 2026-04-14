@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traça</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700;900&family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+
+    <style>
+    /* ─────────────────────────────────────────────────────
+       BASE
+    ───────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+        width: 100%; height: 100%;
+        overflow: hidden;
+        font-family: 'Cormorant Garamond', serif;
+        color: #e8d9b8;
+        user-select: none;
+        -webkit-font-smoothing: antialiased;
+        background: #0e0905;
+    }
+
+    /* ─────────────────────────────────────────────────────
+       COUCHE DE TRANSITION
+    ───────────────────────────────────────────────────── */
+    #t-overlay {
+        position: fixed; inset: 0;
+        background: #0e0905;
+        z-index: 9999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s ease;
+    }
+    #t-overlay.on { opacity: 1; pointer-events: all; }
+
+    /* ─────────────────────────────────────────────────────
+       ÉCRANS
+    ───────────────────────────────────────────────────── */
+    .screen {
+        position: fixed; inset: 0;
+        display: flex; flex-direction: column;
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.5s ease;
+    }
+    .screen.active { opacity: 1; pointer-events: all; }
+
+    /* Fond photo */
+    .s-bg {
+        position: absolute; inset: 0;
+        background-size: cover;
+        background-position: center;
+        z-index: 0;
+    }
+    /* Vignette universelle */
+    .s-bg::after {
+        content: '';
+        position: absolute; inset: 0;
+        background:
+            radial-gradient(ellipse at 50% 45%, transparent 10%, rgba(10,5,2,0.55) 100%),
+            linear-gradient(to bottom, rgba(10,5,2,0.4) 0%, rgba(10,5,2,0.1) 50%, rgba(10,5,2,0.65) 100%);
+    }
+
+    #s-menu .s-bg   { background-image: url('../../assets/images/ui/bg-menu.jpg'); }
+    #s-options .s-bg{ background-image: url('../../assets/images/ui/bg-options.jpg'); }
+    #s-credits .s-bg{ background-image: url('../../assets/images/ui/bg-credits.jpg'); }
+
+    /* Contenu au-dessus des fonds */
+    .s-body {
+        position: relative; z-index: 1;
+        flex: 1;
+        display: flex; flex-direction: column;
+        align-items: center;
+    }
+
+    /* ─────────────────────────────────────────────────────
+       ORNEMENT HORIZONTAL
+    ───────────────────────────────────────────────────── */
+    .orn {
+        display: flex; align-items: center; gap: 12px;
+        width: 100%; max-width: 340px;
+    }
+    .orn-line {
+        flex: 1; height: 1px;
+        background: linear-gradient(to right, transparent, rgba(201,169,110,0.6), transparent);
+    }
+    .orn-gem { color: #c9a96e; font-size: 0.55rem; opacity: 0.75; }
+
+    /* ─────────────────────────────────────────────────────
+       ══ PAGE 1 — MENU PRINCIPAL ══
+    ───────────────────────────────────────────────────── */
+    /* Bouton ⚙ haut-droite */
+    #btn-settings {
+        position: absolute; top: 22px; right: 22px;
+        z-index: 10;
+        width: 44px; height: 44px;
+        border-radius: 50%;
+        border: 1px solid rgba(201,169,110,0.45);
+        background: rgba(14,9,5,0.55);
+        backdrop-filter: blur(10px);
+        color: #c9a96e;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: border-color 0.2s, transform 0.35s;
+    }
+    #btn-settings:hover { border-color: #c9a96e; transform: rotate(72deg); }
+    #btn-settings svg { width: 20px; height: 20px; }
+
+    /* Zone centrale logo + sous-titre */
+    .menu-center {
+        flex: 1;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 16px;
+        padding: 60px 24px 0;
+        animation: fadeUp 1.1s ease both;
+    }
+    .menu-logo {
+        width: clamp(180px, 32vw, 320px);
+        filter: drop-shadow(0 6px 28px rgba(201,169,110,0.5));
+    }
+    .menu-sub {
+        font-family: 'Cinzel', serif;
+        font-size: clamp(0.55rem, 1.3vw, 0.75rem);
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: #c9a96e;
+        opacity: 0.8;
+    }
+
+    /* Bouton DÉBUT (bas d'écran) */
+    .menu-bottom {
+        padding: 0 24px 60px;
+        display: flex; flex-direction: column; align-items: center;
+        animation: fadeUp 1.4s ease both;
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(18px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─────────────────────────────────────────────────────
+       BOUTONS PRINCIPAUX (DÉBUT / CRÉDITS)
+    ───────────────────────────────────────────────────── */
+    .btn-main {
+        position: relative;
+        padding: 15px 72px;
+        font-family: 'Cinzel', serif;
+        font-size: 0.85rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: #f0debb;
+        border: none; background: none; outline: none;
+        cursor: pointer;
+        transition: transform 0.18s;
+    }
+    .btn-main::before {
+        content: '';
+        position: absolute; inset: 0;
+        border-radius: 4px;
+        background: linear-gradient(160deg, #6b4a28 0%, #9e7040 35%, #c8a660 50%, #9e7040 65%, #6b4a28 100%);
+        box-shadow: 0 3px 0 #3a2010, 0 6px 20px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.15);
+        z-index: -1;
+        transition: filter 0.18s;
+    }
+    /* Bordure ciselée */
+    .btn-main::after {
+        content: '';
+        position: absolute; inset: -2px;
+        border-radius: 5px;
+        border: 1px solid rgba(201,169,110,0.35);
+        z-index: -2;
+    }
+    .btn-main:hover { transform: translateY(-2px); }
+    .btn-main:hover::before { filter: brightness(1.18); }
+    .btn-main:active { transform: translateY(1px); }
+
+    /* ─────────────────────────────────────────────────────
+       BOUTON RETOUR (← haut-gauche)
+    ───────────────────────────────────────────────────── */
+    .btn-back {
+        position: absolute; top: 22px; left: 22px; z-index: 10;
+        width: 44px; height: 44px;
+        border-radius: 50%;
+        border: 1px solid rgba(201,169,110,0.45);
+        background: rgba(14,9,5,0.55);
+        backdrop-filter: blur(10px);
+        color: #c9a96e;
+        font-size: 1.1rem;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-back:hover { border-color: #c9a96e; background: rgba(40,25,10,0.75); }
+
+    /* ─────────────────────────────────────────────────────
+       ══ PAGE 2 — OPTIONS / DÉCORS ══
+    ───────────────────────────────────────────────────── */
+    .page-header {
+        width: 100%; max-width: 520px;
+        display: flex; flex-direction: column; align-items: center;
+        padding-top: 70px;
+        padding-bottom: 12px;
+        gap: 8px;
+    }
+    .page-title {
+        font-family: 'Cinzel', serif;
+        font-size: clamp(0.85rem, 2vw, 1.1rem);
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        color: #2b1c0e; /* sombre sur parchemin */
+    }
+    #s-credits .page-title { color: #e8d9b8; } /* clair sur fond sombre */
+
+    .section-label {
+        font-family: 'Cinzel', serif;
+        font-size: 0.6rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: rgba(60,35,12,0.65);
+        margin: 22px 0 8px;
+        text-align: center;
+    }
+
+    /* Rangée option : Langue / Son */
+    .opt-row {
+        display: flex; align-items: stretch;
+        width: 100%; max-width: 420px;
+        border: 1px solid rgba(100,65,25,0.4);
+        border-radius: 3px;
+        overflow: hidden;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, rgba(200,175,130,0.35), rgba(220,195,150,0.22));
+    }
+    .opt-row-label {
+        flex: 1;
+        padding: 13px 18px;
+        font-size: 0.95rem;
+        color: #2b1c0e;
+        border-right: 1px solid rgba(100,65,25,0.3);
+        display: flex; align-items: center;
+    }
+    .opt-choices { display: flex; }
+    .c-btn {
+        padding: 13px 22px;
+        font-family: 'Cinzel', serif;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        color: rgba(50,30,10,0.45);
+        background: transparent; border: none;
+        cursor: pointer;
+        transition: background 0.18s, color 0.18s;
+    }
+    .c-btn.on {
+        background: linear-gradient(135deg, #7a5530, #a57042);
+        color: #f0debb;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+    .c-btn:not(.on):hover { background: rgba(100,65,25,0.18); color: #2b1c0e; }
+
+    /* Zone crédits en bas + bouton centré */
+    .opts-bottom {
+        flex: 1;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: flex-end;
+        padding-bottom: 60px;
+        width: 100%;
+    }
+
+    /* ─────────────────────────────────────────────────────
+       ══ PAGE 3 — CRÉDITS ══
+    ───────────────────────────────────────────────────── */
+    .credits-container {
+        flex: 1;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        padding: 80px 24px 60px;
+        width: 100%; max-width: 600px;
+        align-self: center;
+    }
+    .cr-person {
+        text-align: center;
+        margin: 20px 0;
+    }
+    .cr-name {
+        font-family: 'Cinzel', serif;
+        font-size: clamp(1rem, 2.5vw, 1.25rem);
+        letter-spacing: 0.1em;
+        color: #c9a96e;
+        margin-bottom: 8px;
+    }
+    .cr-roles {
+        font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+        font-weight: 300;
+        font-style: italic;
+        line-height: 1.75;
+        color: rgba(232,217,184,0.8);
+    }
+    .cr-sep {
+        width: 100%; max-width: 280px;
+        height: 1px;
+        background: linear-gradient(to right, transparent, rgba(201,169,110,0.35), transparent);
+        border: none;
+        margin: 8px 0;
+    }
+    </style>
+</head>
+<body>
+
+<!-- Overlay de transition fondu noir -->
+<div id="t-overlay"></div>
+
+<!-- ════════════════════════════════════════════════════
+     ÉCRAN 1 — MENU PRINCIPAL
+════════════════════════════════════════════════════ -->
+<div id="s-menu" class="screen active">
+    <div class="s-bg"></div>
+    <div class="s-body">
+
+        <!-- ⚙ Paramètres haut-droite -->
+        <button id="btn-settings" aria-label="Options" onclick="go('s-options','s-menu')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06-.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+        </button>
+
+        <!-- Logo centré -->
+        <div class="menu-center">
+            <img src="../../assets/images/logos/logo-traca-typographique.webp" class="menu-logo" alt="Traça">
+            <p class="menu-sub">Visite Virtuelle · Patrimoine Historique</p>
+            <div class="orn">
+                <div class="orn-line"></div><span class="orn-gem">✦</span><div class="orn-line"></div>
+            </div>
+        </div>
+
+        <!-- DÉBUT en bas -->
+        <div class="menu-bottom">
+            <button class="btn-main" onclick="alert('Lancer la visite')">DÉBUT</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     ÉCRAN 2 — OPTIONS / DÉCORS
+════════════════════════════════════════════════════ -->
+<div id="s-options" class="screen">
+    <div class="s-bg"></div>
+    <div class="s-body">
+
+        <!-- ← Retour -->
+        <button class="btn-back" aria-label="Retour" onclick="go('s-menu','s-options')">←</button>
+
+        <!-- Titre -->
+        <div class="page-header">
+            <h1 class="page-title">Décors</h1>
+            <div class="orn" style="max-width:280px;">
+                <div class="orn-line" style="background:linear-gradient(to right,transparent,rgba(60,35,12,0.4),transparent);"></div>
+                <span class="orn-gem" style="color:rgba(60,35,12,0.5);">✦</span>
+                <div class="orn-line" style="background:linear-gradient(to right,transparent,rgba(60,35,12,0.4),transparent);"></div>
+            </div>
+        </div>
+
+        <!-- Section LANGUE & SON -->
+        <p class="section-label">Langue &amp; Son</p>
+
+        <!-- Langue -->
+        <div class="opt-row">
+            <span class="opt-row-label">Langue</span>
+            <div class="opt-choices">
+                <button class="c-btn" data-g="lang" data-v="ar" onclick="pick(this)">العربية</button>
+                <button class="c-btn on" data-g="lang" data-v="fr" onclick="pick(this)">Français</button>
+                <button class="c-btn" data-g="lang" data-v="en" onclick="pick(this)">English</button>
+            </div>
+        </div>
+
+        <!-- Son -->
+        <div class="opt-row">
+            <span class="opt-row-label">Son</span>
+            <div class="opt-choices">
+                <button class="c-btn" data-g="sound" data-v="off" onclick="pick(this)">Off</button>
+                <button class="c-btn on" data-g="sound" data-v="on" onclick="pick(this)">On</button>
+            </div>
+        </div>
+
+        <!-- Bouton CRÉDITS en bas -->
+        <div class="opts-bottom">
+            <button class="btn-main" style="padding:15px 56px;" onclick="go('s-credits','s-options')">CRÉDITS</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     ÉCRAN 3 — CRÉDITS
+════════════════════════════════════════════════════ -->
+<div id="s-credits" class="screen">
+    <div class="s-bg"></div>
+    <div class="s-body">
+
+        <!-- ← Retour -->
+        <button class="btn-back" aria-label="Retour" onclick="go('s-options','s-credits')">←</button>
+
+        <!-- Titre + crédits centrés -->
+        <div class="credits-container">
+
+            <h1 class="page-title" style="color:#e8d9b8; margin-bottom:10px;">Crédits</h1>
+            <div class="orn" style="margin-bottom:32px;">
+                <div class="orn-line"></div><span class="orn-gem">✦</span><div class="orn-line"></div>
+            </div>
+
+            <!-- Personne 1 -->
+            <div class="cr-person">
+                <p class="cr-name">Chehinez Fetteaka</p>
+                <p class="cr-roles">
+                    Fondatrice &nbsp;·&nbsp; Écriture &nbsp;·&nbsp; Recherche scientifique<br>
+                    Narration textuelle &nbsp;·&nbsp; Direction artistique
+                </p>
+            </div>
+
+            <hr class="cr-sep">
+
+            <!-- Personne 2 -->
+            <div class="cr-person">
+                <p class="cr-name">Amir Dekik</p>
+                <p class="cr-roles">
+                    Développement technique &nbsp;·&nbsp; Direction artistique (Visuel)
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+// ── Transition fondu-noir entre 2 écrans ──
+function go(to, from) {
+    const ov = document.getElementById('t-overlay');
+    ov.classList.add('on');
+    setTimeout(() => {
+        document.getElementById(from).classList.remove('active');
+        document.getElementById(to).classList.add('active');
+        setTimeout(() => ov.classList.remove('on'), 200);
+    }, 320);
+}
+
+// ── Toggles (Langue / Son) ──
+function pick(btn) {
+    const g = btn.dataset.g;
+    document.querySelectorAll(`.c-btn[data-g="${g}"]`).forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    localStorage.setItem('traca_' + g, btn.dataset.v);
+}
+
+// Restaurer préférences
+['lang','sound'].forEach(g => {
+    const v = localStorage.getItem('traca_' + g);
+    if (v) {
+        document.querySelectorAll(`.c-btn[data-g="${g}"]`).forEach(b => b.classList.remove('on'));
+        const t = document.querySelector(`.c-btn[data-g="${g}"][data-v="${v}"]`);
+        if (t) t.classList.add('on');
+    }
+});
+</script>
+</body>
+</html>
