@@ -82,23 +82,26 @@ export class ExperienceManager {
     //  LOCK / UNLOCK ENTRY
     // ─────────────────────────────────────────────────────────────────
     _lockEntry() {
-        // Cache et désactive le bouton d'entrée jusqu'à chargement complet
-        const btn = document.getElementById('enter-btn') ||
-                    document.getElementById('c-loader-enter');
-        if (btn) {
-            btn.style.opacity       = '0';
-            btn.style.pointerEvents = 'none';
-            btn.style.display       = 'none';
-        }
-    }
-
-    _unlockEntry() {
-        // Réactive le bouton une fois le chargement terminé
+        // Affiche le bouton dès le début mais le désactive (style grisé/locked)
         const btn = document.getElementById('enter-btn') ||
                     document.getElementById('c-loader-enter');
         if (btn) {
             btn.style.display       = 'inline-block';
+            btn.style.opacity       = '0.4';
+            btn.style.pointerEvents = 'none';
+            btn.style.filter        = 'grayscale(100%)';
+        }
+    }
+
+    _unlockEntry() {
+        // Réactive et met en évidence le bouton une fois le chargement terminé
+        const btn = document.getElementById('enter-btn') ||
+                    document.getElementById('c-loader-enter');
+        if (btn) {
+            btn.style.display       = 'inline-block';
+            btn.style.opacity       = '1';
             btn.style.pointerEvents = 'auto';
+            btn.style.filter        = 'none';
         }
     }
 

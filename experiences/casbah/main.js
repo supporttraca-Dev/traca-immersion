@@ -307,11 +307,11 @@ class CasbahExperience {
         try {
             const [texDay, texNight] = await Promise.all([
                 this._loadTextureWithProgress(
-                    '../../assets/images/casbah assasin.png',
+                    '../../assets/images/casbah assasin.png?v=2.0',
                     (p) => { prog1 = p; updateProgress(); }
                 ),
                 this._loadTextureWithProgress(
-                    '../../assets/images/casbah assasin night.png',
+                    '../../assets/images/casbah assasin night.png?v=2.0',
                     (p) => { prog2 = p; updateProgress(); }
                 )
             ]);
@@ -401,6 +401,11 @@ class CasbahExperience {
 
         if (enterBtn) {
             enterBtn.style.display = 'inline-block';
+            enterBtn.style.opacity = '1';
+            enterBtn.style.pointerEvents = 'auto';
+            enterBtn.style.filter = 'none';
+            enterBtn.style.cursor = 'pointer';
+
             enterBtn.addEventListener('click', () => {
                 // ✅ Ce clic utilisateur débloque l'autoplay sur tous les navigateurs
                 this.state.audioUnlocked = true;
