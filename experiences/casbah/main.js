@@ -295,20 +295,30 @@ class CasbahExperience {
        BOOT & LOADING
     ══════════════════════════════════════════════════════════ */
     async _loadEnvironment() {
-        const texLoader = new THREE.TextureLoader();
-        let p = 0;
-        const fakeP = setInterval(() => { if (p < 85) { p += 2; this._setProg(p); } }, 50);
+        this._setProg(0);
+        let prog1 = 0, prog2 = 0;
+
+        const updateProgress = () => {
+            // Moyenne des deux téléchargements, plafonnée à 95% jusqu'à chargement complet
+            const avg = Math.round(((prog1 + prog2) / 2) * 95);
+            this._setProg(avg);
+        };
 
         try {
             const [texDay, texNight] = await Promise.all([
-                texLoader.loadAsync('../../assets/images/casbah assasin.png'),
-                texLoader.loadAsync('../../assets/images/casbah assasin night.png')
+                this._loadTextureWithProgress(
+                    '../../assets/images/casbah assasin.png',
+                    (p) => { prog1 = p; updateProgress(); }
+                ),
+                this._loadTextureWithProgress(
+                    '../../assets/images/casbah assasin night.png',
+                    (p) => { prog2 = p; updateProgress(); }
+                )
             ]);
 
-            clearInterval(fakeP);
             this._setProg(100);
 
-            texDay.colorSpace = THREE.SRGBColorSpace;
+            texDay.colorSpace   = THREE.SRGBColorSpace;
             texNight.colorSpace = THREE.SRGBColorSpace;
 
             const geo = new THREE.SphereGeometry(500, 60, 40);
@@ -328,9 +338,48 @@ class CasbahExperience {
 
         } catch (err) {
             console.error(err);
-            clearInterval(fakeP);
             this.els.pct.innerText = 'Erreur textures';
         }
+    }
+
+    /**
+     * Charge une texture avec progression réelle via XHR (bytes reçus / total).
+     * @param {string} url - Chemin de la texture
+     * @param {function} onProgress - Callback(0..1) avancée du téléchargement
+     * @returns {Promise<THREE.Texture>}
+     */
+    _loadTextureWithProgress(url, onProgress) {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url);
+            xhr.responseType = 'blob';
+
+            xhr.onprogress = (e) => {
+                if (e.lengthComputable && onProgress) {
+                    onProgress(e.loaded / e.total);
+                }
+            };
+
+            xhr.onload = () => {
+                if (xhr.status >= 400) {
+                    reject(new Error(`HTTP ${xhr.status} — ${url}`));
+                    return;
+                }
+                const objectUrl = URL.createObjectURL(xhr.response);
+                const img = new Image();
+                img.onload = () => {
+                    const tex = new THREE.Texture(img);
+                    tex.needsUpdate = true;
+                    URL.revokeObjectURL(objectUrl);
+                    resolve(tex);
+                };
+                img.onerror = () => reject(new Error(`Image decode error — ${url}`));
+                img.src = objectUrl;
+            };
+
+            xhr.onerror = () => reject(new Error(`Network error — ${url}`));
+            xhr.send();
+        });
     }
 
     _setProg(v) {

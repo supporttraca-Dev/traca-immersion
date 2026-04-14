@@ -35,14 +35,86 @@ export class ExperienceManager {
         this.setupIntroButton();
         this.buildNavDots();
 
-        // Fallback : intro max 2 secondes sans attendre le modèle 3D
-        const introTimeout = setTimeout(() => this._playIntro(), 2000);
+        // ─────────────────────────────────────────────────────────────
+        //  STRICT LOADING GATE
+        //  L'utilisateur NE peut PAS entrer avant que le modèle soit
+        //  chargé à 100%. Aucun fallback court ne contourne cela.
+        // ─────────────────────────────────────────────────────────────
+        this._lockEntry();  // verrou immédiat sur le bouton d'entrée
+
         if (this.modelViewer) {
-            this.modelViewer.addEventListener('load', () => {
-                clearTimeout(introTimeout);
-                setTimeout(() => this._playIntro(), 300);
+            // Progression réelle via les events model-viewer
+            this.modelViewer.addEventListener('progress', (e) => {
+                const pct = Math.round((e.detail.totalProgress || 0) * 100);
+                this._setLoaderProgress(pct);
             });
+
+            // Fallback de sécurité absolu (90s) — réseau très lent
+            this._safetyTimeout = setTimeout(() => {
+                console.warn('[TRACA] ⚠ Timeout chargement modèle — accès forcé');
+                this._setLoaderProgress(100);
+                this._playIntro();
+            }, 90000);
+
+            // Déclenchement UNIQUEMENT quand le modèle est complètement chargé
+            this.modelViewer.addEventListener('load', () => {
+                clearTimeout(this._safetyTimeout);
+                this._setLoaderProgress(100);
+                setTimeout(() => this._playIntro(), 400);
+            }, { once: true });
+
+            // Erreur de chargement du modèle
+            this.modelViewer.addEventListener('error', () => {
+                clearTimeout(this._safetyTimeout);
+                const label = document.getElementById('c-loader-label');
+                if (label) label.innerText = 'Erreur de chargement. Rechargez la page.';
+                const pctEl = document.getElementById('c-loader-pct');
+                if (pctEl) pctEl.innerText = 'Erreur';
+            }, { once: true });
+
+        } else {
+            // Pas de modèle 3D dans cette expérience — entrée directe
+            setTimeout(() => this._playIntro(), 500);
         }
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    //  LOCK / UNLOCK ENTRY
+    // ─────────────────────────────────────────────────────────────────
+    _lockEntry() {
+        // Cache et désactive le bouton d'entrée jusqu'à chargement complet
+        const btn = document.getElementById('enter-btn') ||
+                    document.getElementById('c-loader-enter');
+        if (btn) {
+            btn.style.opacity       = '0';
+            btn.style.pointerEvents = 'none';
+            btn.style.display       = 'none';
+        }
+    }
+
+    _unlockEntry() {
+        // Réactive le bouton une fois le chargement terminé
+        const btn = document.getElementById('enter-btn') ||
+                    document.getElementById('c-loader-enter');
+        if (btn) {
+            btn.style.display       = 'inline-block';
+            btn.style.pointerEvents = 'auto';
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    //  LOADER PROGRESS (RÉEL)
+    // ─────────────────────────────────────────────────────────────────
+    _setLoaderProgress(pct) {
+        const v     = Math.min(Math.max(pct, 0), 100);
+        const bar   = document.getElementById('c-loader-bar');
+        const pctEl = document.getElementById('c-loader-pct');
+        const lbl   = document.getElementById('c-loader-label');
+        if (bar)   bar.style.width = v + '%';
+        if (pctEl) pctEl.innerText = v + '%';
+        if (lbl)   lbl.innerText = v < 100
+            ? `Chargement du modèle 3D… ${v}%`
+            : 'Chargement terminé — Bienvenue !';
     }
 
     // ─────────────────────────────────────────────────────────────────
@@ -125,9 +197,13 @@ export class ExperienceManager {
         if (this.introStarted) return;
         this.introStarted = true;
 
+        // ── Déverrouiller le bouton d'entrée avant l'animation ──
+        this._unlockEntry();
+
         gsap.set('.intro-ornament-line', { scaleX: 0 });
-        gsap.set(['.intro-eyebrow', '.intro-subtitle', '.intro-hint', '#enter-btn'], { opacity: 0, y: 15 });
+        gsap.set(['.intro-eyebrow', '.intro-subtitle', '.intro-hint'], { opacity: 0, y: 15 });
         gsap.set('.intro-title-line', { opacity: 0, y: 35 });
+        gsap.set('#enter-btn', { opacity: 0, y: 15 });
 
         const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
         tl.to('.intro-ornament-line', { scaleX: 1, duration: 1.5, stagger: 0.3 })
