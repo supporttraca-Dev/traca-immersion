@@ -545,7 +545,13 @@ model-viewer {
 
 /* ─── MOBILE ─────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-    .chapter { padding: 8vh 4vw; }
+    .chapter { 
+        padding: 8vh 4vw; 
+        margin-bottom: 200vh; /* Espace gigantesque entre les chapitres */
+    }
+    .chapter--final {
+        margin-bottom: 5vh; 
+    }
 
     .chapter-card,
     .chapter-card--right {

@@ -172,14 +172,18 @@ export class ExperienceManager {
 
         const lerp = (a, b, t) => a + (b - a) * t;
 
+        const isMobile = window.innerWidth <= 768;
+        const mobileRadiusMultiplier = isMobile ? 1.25 : 1;
+        const mobileFovMultiplier = isMobile ? 1.4 : 1; // Un FOV plus large agit comme un objectif grand angle (dé-zoom fort)
+
         this._applyCam({
             theta:  lerp(prev.theta,       next.theta,       t),
             phi:    lerp(prev.phi,         next.phi,         t),
-            radius: lerp(prev.radius,      next.radius,      t),
+            radius: lerp(prev.radius,      next.radius,      t) * mobileRadiusMultiplier,
             tx:     lerp(prev.tx   || 0,   next.tx   || 0,   t),
             ty:     lerp(prev.ty   || 0,   next.ty   || 0,   t),
             tz:     lerp(prev.tz   || 0,   next.tz   || 0,   t),
-            fov:    lerp(prev.fov,         next.fov,         t),
+            fov:    lerp(prev.fov,         next.fov,         t) * mobileFovMultiplier,
         });
     }
 
