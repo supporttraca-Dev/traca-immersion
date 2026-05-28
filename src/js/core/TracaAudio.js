@@ -106,6 +106,23 @@ export class TracaAudio {
         if (this.ctx && this.ctx.state === 'suspended') {
             this.ctx.resume().catch(() => { });
         }
+        
+        // Anti-blocage iOS / Safari : Forcer l'autorisation de tous les canaux HTMLAudioElement
+        // lors de la toute première interaction utilisateur.
+        if (!this._iosUnlocked) {
+            this._iosUnlocked = true;
+            Object.values(this.channels).forEach(el => {
+                try {
+                    // Un load() explicite suivi d'un play() (même vide) transfère le jeton d'autorisation
+                    // de l'interaction utilisateur vers la balise <audio> pour les futurs setTimeout.
+                    el.load();
+                    const p = el.play();
+                    if (p !== undefined) {
+                        p.then(() => { el.pause(); }).catch(() => {});
+                    }
+                } catch (e) {}
+            });
+        }
     }
 
     /**
