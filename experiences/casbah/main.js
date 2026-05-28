@@ -326,6 +326,14 @@ class CasbahExperience {
             this._setProg(avg);
         };
 
+        const withTimeout = (promise, ms) => Promise.race([
+            promise, 
+            new Promise(resolve => setTimeout(() => {
+                console.warn("[Traca] Timeout de sécurité atteint (" + ms + "ms). Déblocage forcé d'un asset.");
+                resolve();
+            }, ms))
+        ]);
+
         try {
             const [texDay, texNight] = await Promise.all([
                 this._loadTextureWithProgress(
@@ -337,14 +345,14 @@ class CasbahExperience {
                     (p) => { prog2 = p; updateProgress(); }
                 ),
                 // On inclut explicitement l'image de la carte pour éviter qu'elle soit invisible au 1er rendu de la MapIntro.
-                new Promise((resolve) => {
+                withTimeout(new Promise((resolve) => {
                     const img = new Image();
                     img.onload = () => { prog3 = 1; updateProgress(); resolve(); };
                     img.onerror = resolve;
                     img.src = '../../assets/images/map.png';
-                }),
+                }), 8000),
                 // On attend que la vidéo du menu principal soit prête à être jouée
-                new Promise((resolve) => {
+                withTimeout(new Promise((resolve) => {
                     const vid = document.getElementById('menu-bg-video');
                     if (!vid || vid.readyState >= 3) {
                         resolve();
@@ -352,10 +360,10 @@ class CasbahExperience {
                         vid.addEventListener('canplay', resolve, { once: true });
                         vid.addEventListener('error', resolve, { once: true });
                     }
-                }),
+                }), 8000),
                 // Chargement en arrière-plan des audios narratifs et répliques
                 ...audioPaths.map((path, idx) => {
-                    return new Promise((resolve) => {
+                    return withTimeout(new Promise((resolve) => {
                         const xhr = new XMLHttpRequest();
                         xhr.open('GET', '/assets/audio/' + path, true);
                         xhr.responseType = 'blob';
@@ -373,7 +381,7 @@ class CasbahExperience {
                             resolve();
                         };
                         xhr.send();
-                    });
+                    }), 8000);
                 })
             ]);
 

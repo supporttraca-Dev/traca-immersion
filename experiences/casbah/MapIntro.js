@@ -471,14 +471,14 @@ export class MapIntro {
         const cl2X = -this._cx * this.PAR_CLOUD2;
         const cl2Y = -this._cy * this.PAR_CLOUD2;
 
-        this.imgMap.style.transform = `translate(${mapX}px, ${mapY}px)`;
-        this.poiLayer.style.transform = `translate(${mapX}px, ${mapY}px)`;
-
-        // Nuages indépendants pour effet de profondeur
-        this.cloud1.style.transform = `translate(${clX}px, ${clY}px)`;
-        this.cloud2.style.transform = `translate(${cl2X}px, ${cl2Y}px)`;
-        if (this.cloud3) this.cloud3.style.transform = `translate(${-cl2X * 0.7}px, ${-cl2Y * 0.5}px)`;
-        this.cloudShadow.style.transform = `translate(${clX + 12}px, ${clY + 14}px)`;
+        this.imgMap.style.transform = `translate3d(${mapX}px, ${mapY}px, 0)`;
+        this.poiLayer.style.transform = `translate3d(${mapX}px, ${mapY}px, 0)`;
+        
+        // Nuages parallax
+        this.cloud1.style.transform = `translate3d(${clX}px, ${clY}px, 0)`;
+        this.cloud2.style.transform = `translate3d(${cl2X}px, ${cl2Y}px, 0)`;
+        if (this.cloud3) this.cloud3.style.transform = `translate3d(${-cl2X * 0.7}px, ${-cl2Y * 0.5}px, 0)`;
+        this.cloudShadow.style.transform = `translate3d(${clX + 12}px, ${clY + 14}px, 0)`;
     }
 
     // ─────────────────────────────────────────────────────────────────────
