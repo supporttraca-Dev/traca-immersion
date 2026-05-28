@@ -296,12 +296,33 @@ class CasbahExperience {
        BOOT & LOADING
     ══════════════════════════════════════════════════════════ */
     async _loadEnvironment() {
+        this.preloadedAudios = {};
         this._setProg(0);
+
+        // Extraction dynamique des chemins audio uniques des narrations et répliques
+        const audioPaths = [];
+        CASBAH_SCENARIO.pois.forEach(poi => {
+            if (poi.audio && !audioPaths.includes(poi.audio)) {
+                audioPaths.push(poi.audio);
+            }
+            if (poi.replicas) {
+                poi.replicas.forEach(rep => {
+                    if (rep.audio && !audioPaths.includes(rep.audio)) {
+                        audioPaths.push(rep.audio);
+                    }
+                });
+            }
+        });
+
+        const audioProgress = new Array(audioPaths.length).fill(0);
         let prog1 = 0, prog2 = 0, prog3 = 0;
 
         const updateProgress = () => {
-            // Moyenne des téléchargements, plafonnée à 95% jusqu'à chargement complet
-            const avg = Math.round(((prog1 + prog2 + prog3) / 3) * 95);
+            const audioSum = audioProgress.reduce((a, b) => a + b, 0);
+            const totalItems = 3 + audioPaths.length;
+            const currentSum = prog1 + prog2 + prog3 + audioSum;
+            // Moyenne globale plafonnée à 95% jusqu'à résolution finale
+            const avg = Math.round((currentSum / totalItems) * 95);
             this._setProg(avg);
         };
 
@@ -316,8 +337,6 @@ class CasbahExperience {
                     (p) => { prog2 = p; updateProgress(); }
                 ),
                 // On inclut explicitement l'image de la carte pour éviter qu'elle soit invisible au 1er rendu de la MapIntro.
-                // On utilise new Image() classique au lieu d'un Blob XHR pour garantir que le cache navigateur
-                // sera partagé avec le background CSS de MapIntro.
                 new Promise((resolve) => {
                     const img = new Image();
                     img.onload = () => { prog3 = 1; updateProgress(); resolve(); };
@@ -333,6 +352,28 @@ class CasbahExperience {
                         vid.addEventListener('canplay', resolve, { once: true });
                         vid.addEventListener('error', resolve, { once: true });
                     }
+                }),
+                // Chargement en arrière-plan des audios narratifs et répliques
+                ...audioPaths.map((path, idx) => {
+                    return new Promise((resolve) => {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('GET', '/assets/audio/' + path, true);
+                        xhr.responseType = 'blob';
+                        xhr.onload = () => {
+                            if (xhr.status === 200) {
+                                this.preloadedAudios[path] = URL.createObjectURL(xhr.response);
+                            }
+                            audioProgress[idx] = 1;
+                            updateProgress();
+                            resolve();
+                        };
+                        xhr.onerror = () => {
+                            audioProgress[idx] = 1;
+                            updateProgress();
+                            resolve();
+                        };
+                        xhr.send();
+                    });
                 })
             ]);
 
@@ -1741,7 +1782,14 @@ class CasbahExperience {
         // Utilisation du chemin complet (peut être dans un sous-dossier ou specifié dans la réplique)
         const audioPath = explicitAudio !== null ? explicitAudio : poi.audio;
         const narCh = tracaAudio.channels.narration;
-        narCh.src = '/assets/audio/' + audioPath;
+        
+        // Utilisation du Blob URL préchargé si disponible pour zéro latence
+        if (this.preloadedAudios && this.preloadedAudios[audioPath]) {
+            narCh.src = this.preloadedAudios[audioPath];
+        } else {
+            narCh.src = '/assets/audio/' + audioPath;
+        }
+        
         narCh.volume = tracaAudio.volumes.narration;
         narCh.play().catch(e => console.warn('Narration bloquée:', e));
         tracaAudio.currentNarration = audioPath;
