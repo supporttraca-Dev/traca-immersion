@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LNXLY71ZFL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-LNXLY71ZFL');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRACA · Patrimoine Algérien &amp; Immersion 3D</title>
@@ -156,6 +165,22 @@
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') document.getElementById('credits-overlay').classList.remove('active');
     });
+
+    // --- Google Analytics Event Clicks ---
+    function trackCardClick(id, name) {
+        if (typeof window.gtag === 'function') {
+            window.gtag('event', 'experience_card_click', {
+                experience_name: name,
+                card_id: id,
+                project: 'TRACA',
+                device_type: window.innerWidth <= 768 ? 'mobile' : 'desktop'
+            });
+        }
+    }
+
+    document.getElementById('card-casbah')?.addEventListener('click', () => trackCardClick('card-casbah', 'casbah'));
+    document.getElementById('card-tombeau')?.addEventListener('click', () => trackCardClick('card-tombeau', 'tombeau'));
+    document.getElementById('card-synagogue')?.addEventListener('click', () => trackCardClick('card-synagogue', 'synagogue'));
     </script>
 
 </body>

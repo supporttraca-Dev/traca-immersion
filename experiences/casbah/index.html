@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LNXLY71ZFL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-LNXLY71ZFL');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>La Casbah d'Alger — Visite 360°</title>
@@ -9,6 +18,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
     <link rel="icon" type="image/webp" href="../../assets/images/logo-traca-symbole.webp">
+
+    <!-- Préchargement des ressources lourdes (Optimisation First Load) -->
+    <link rel="preload" href="../../assets/images/map.png" as="image">
+    <link rel="preload" href="../../assets/video/bg_menu_mobile.mp4" as="video" media="(max-width: 768px)">
+    <link rel="preload" href="../../assets/video/bg_menu.mp4" as="video" media="(min-width: 769px)">
 
     <link rel="stylesheet" href="../../src/css/base.css">
     <link rel="stylesheet" href="style.css">
@@ -58,7 +72,7 @@
 
 <!-- ═══ MENU PRINCIPAL ═══════════════════════════════════════ -->
 <div id="c-menu" hidden>
-    <video id="menu-bg-video" class="menu-video-bg" autoplay loop muted playsinline></video>
+    <video id="menu-bg-video" class="menu-video-bg" preload="auto" autoplay loop muted playsinline></video>
     <script>
         // Détection de l'écran avant chargement pour charger le bon asset vidéo (économie de données)
         const menuVid = document.getElementById('menu-bg-video');
@@ -259,11 +273,18 @@
 </div>
 
 <script>
+// Préchargement de l'audio UI pour éviter la latence
+const uiSfxAudio = new Audio('/assets/audio/ui/click.mp3');
+uiSfxAudio.volume = 0.6;
+uiSfxAudio.load();
+
 // ── Transition fondu-noir entre 2 écrans ──
 window.goScreen = function(to, from) {
     const ov = document.getElementById('t-overlay');
     if (!ov) return;
-    const clickSfx = new Audio('/assets/audio/ui/click.mp3');
+    
+    // Joue le son sans latence via cloneNode
+    const clickSfx = uiSfxAudio.cloneNode();
     clickSfx.volume = 0.6;
     clickSfx.play().catch(() => {});
     
@@ -277,7 +298,7 @@ window.goScreen = function(to, from) {
 
 // ── Toggles (Langue / Son) ──
 window.pickOpt = function(btn) {
-    const clickSfx = new Audio('/assets/audio/ui/click.mp3');
+    const clickSfx = uiSfxAudio.cloneNode();
     clickSfx.volume = 0.6;
     clickSfx.play().catch(() => {});
 

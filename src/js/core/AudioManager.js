@@ -4,6 +4,8 @@
  * Fix autoplay : startAmbient() doit être appelé dans un gestionnaire
  * de clic utilisateur pour contourner la politique des navigateurs.
  */
+import { Analytics } from './Analytics.js';
+
 export class AudioManager {
     constructor() {
         this.ambient            = document.getElementById('ambient-audio');
@@ -26,6 +28,7 @@ export class AudioManager {
             playPromise
                 .then(() => {
                     gsap.to(this.ambient, { volume: 0.32, duration: 5 });
+                    Analytics.trackAudioPlayback('ambience', 'play', 'ambient.mp3');
                 })
                 .catch(err => {
                     console.warn('[AudioManager] Ambient blocked:', err);
@@ -50,6 +53,7 @@ export class AudioManager {
             .then(() => {
                 gsap.to(narration, { volume: 0.85, duration: 1.2 });
                 this.currentNarration = narration;
+                Analytics.trackAudioPlayback('narration', 'play', chapterId);
             })
             .catch(err => console.warn(`[AudioManager] Narration ${chapterId} blocked:`, err));
     }
@@ -72,6 +76,7 @@ export class AudioManager {
 
         toggle.addEventListener('click', () => {
             this.audioEnabled = !this.audioEnabled;
+            Analytics.trackAudioMute(!this.audioEnabled, 'hud');
 
             const on  = document.getElementById('icon-sound-on');
             const off = document.getElementById('icon-sound-off');

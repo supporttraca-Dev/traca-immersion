@@ -11,12 +11,15 @@
  *  { theta: DEG, phi: DEG, radius: METRES, tx: M, ty: M, tz: M, fov: DEG }
  */
 
+import { Analytics } from './Analytics.js';
+
 export class ExperienceManager {
     constructor(config) {
         this.config        = config;
         this.modelViewer   = document.getElementById(config.modelId);
         this.chapterEls    = document.querySelectorAll('.chapter');
         this.audioManager  = config.audioManager;
+        this.experienceName = config.experienceName || (config.modelId === 'mausoleum-model' ? 'tombeau' : 'synagogue');
 
         // Toggled by DirectorTool. When true, lenis camera sync is paused.
         this.isEditMode    = false;
@@ -42,6 +45,9 @@ export class ExperienceManager {
         // ─────────────────────────────────────────────────────────────
         this._lockEntry();  // verrou immédiat sur le bouton d'entrée
 
+        this._startTime = performance.now();
+        Analytics.track3DModelLoad(this.experienceName, 'start');
+
         if (this.modelViewer) {
             // Progression réelle via les events model-viewer
             this.modelViewer.addEventListener('progress', (e) => {
@@ -52,6 +58,7 @@ export class ExperienceManager {
             // Fallback de sécurité absolu (90s) — réseau très lent
             this._safetyTimeout = setTimeout(() => {
                 console.warn('[TRACA] ⚠ Timeout chargement modèle — accès forcé');
+                Analytics.track3DModelLoad(this.experienceName, 'timeout');
                 this._setLoaderProgress(100);
                 this._playIntro();
             }, 90000);
@@ -59,6 +66,8 @@ export class ExperienceManager {
             // Déclenchement UNIQUEMENT quand le modèle est complètement chargé
             this.modelViewer.addEventListener('load', () => {
                 clearTimeout(this._safetyTimeout);
+                const duration = ((performance.now() - this._startTime) / 1000).toFixed(2);
+                Analytics.track3DModelLoad(this.experienceName, 'success', parseFloat(duration));
                 this._setLoaderProgress(100);
                 setTimeout(() => this._playIntro(), 400);
             }, { once: true });
@@ -66,6 +75,7 @@ export class ExperienceManager {
             // Erreur de chargement du modèle
             this.modelViewer.addEventListener('error', () => {
                 clearTimeout(this._safetyTimeout);
+                Analytics.track3DModelLoad(this.experienceName, 'error');
                 const label = document.getElementById('c-loader-label');
                 if (label) label.innerText = 'Erreur de chargement. Rechargez la page.';
                 const pctEl = document.getElementById('c-loader-pct');
@@ -262,6 +272,7 @@ export class ExperienceManager {
     }
 
     _revealUI() {
+        Analytics.trackExperienceEntry(this.experienceName);
         gsap.to(['#chapter-nav', '#audio-toggle', '.back-btn', '#progress-container', '#btn-hud-home'], {
             opacity: 1, duration: 1, stagger: 0.12
         });
@@ -339,6 +350,7 @@ export class ExperienceManager {
 
         if (!arInvokeBtn) return;
         arInvokeBtn.addEventListener('click', () => {
+            Analytics.trackARActivation(this.experienceName);
             if (this.modelViewer?.canActivateAR) {
                 this.modelViewer.activateAR();
             } else if (arNoSupport) {
@@ -360,6 +372,12 @@ export class ExperienceManager {
             const total = this.chapterEls.length;
             label.textContent = `${String(index + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
         }
+
+        // Custom chapter view analytics
+        const chapter = this.chapterEls[index];
+        const chapterTitle = chapter?.querySelector('.chapter-title')?.textContent?.replace(/\s+/g, ' ').trim() || `Chapitre ${index + 1}`;
+        Analytics.trackChapterView(this.experienceName, chapterId, index, chapterTitle);
+
         if (this.audioManager) this.audioManager.playNarration(chapterId);
     }
 

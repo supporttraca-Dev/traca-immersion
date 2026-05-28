@@ -46,9 +46,16 @@ export class MapIntro {
         this.audioWind = new Audio('../../assets/audio/ambience/night/ambiance night 1.mp3');
         this.audioWind.loop = true;
         this.audioWind.volume = 0;
+        
         this.audioClick = new Audio('/assets/audio/ui/click.mp3');         // Clic UI standard
+        this.audioClick.load();
+        
         this.audioEnter = new Audio('/assets/audio/ui/enter.mp3');         // Clic POI valide (plongeon)
+        this.audioEnter.load();
+        
         this.audioError = new Audio('/assets/audio/ui/error.mp3');         // Clic POI verrouillé
+        this.audioError.load();
+        
         // S'assure que les fichiers optionnels ne bloquent pas si absents
         this.audioEnter.onerror = () => { this.audioEnter = this.audioClick; };
         this.audioError.onerror = () => { this.audioError = this.audioClick; };

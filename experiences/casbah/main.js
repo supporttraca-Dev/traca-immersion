@@ -3,6 +3,7 @@ import { OrbitControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/cont
 import { CSS2DRenderer, CSS2DObject } from 'https://unpkg.com/three@0.160.0/examples/jsm/renderers/CSS2DRenderer.js';
 import { MapIntro } from './MapIntro.js';
 import { tracaAudio } from '../../src/js/core/TracaAudio.js';
+import { Analytics } from '../../src/js/core/Analytics.js';
 
 /* ══════════════════════════════════════════════════════════
    SCÉNARIO CASBAH — DONNÉES STATIQUES INTÉGRÉES EN DUR
@@ -296,11 +297,11 @@ class CasbahExperience {
     ══════════════════════════════════════════════════════════ */
     async _loadEnvironment() {
         this._setProg(0);
-        let prog1 = 0, prog2 = 0;
+        let prog1 = 0, prog2 = 0, prog3 = 0;
 
         const updateProgress = () => {
-            // Moyenne des deux téléchargements, plafonnée à 95% jusqu'à chargement complet
-            const avg = Math.round(((prog1 + prog2) / 2) * 95);
+            // Moyenne des téléchargements, plafonnée à 95% jusqu'à chargement complet
+            const avg = Math.round(((prog1 + prog2 + prog3) / 3) * 95);
             this._setProg(avg);
         };
 
@@ -313,6 +314,11 @@ class CasbahExperience {
                 this._loadTextureWithProgress(
                     '../../assets/images/casbah assasin night.png?v=2.0',
                     (p) => { prog2 = p; updateProgress(); }
+                ),
+                // On inclut explicitement l'image de la carte pour éviter qu'elle soit invisible au 1er rendu de la MapIntro
+                this._loadTextureWithProgress(
+                    '../../assets/images/map.png',
+                    (p) => { prog3 = p; updateProgress(); }
                 )
             ]);
 
@@ -409,6 +415,7 @@ class CasbahExperience {
             enterBtn.addEventListener('click', () => {
                 // ✅ Ce clic utilisateur débloque l'autoplay sur tous les navigateurs
                 this.state.audioUnlocked = true;
+                Analytics.trackExperienceEntry('casbah');
                 // ✅ Initialiser + déverrouiller le contexte audio singleton (Web Audio API)
                 tracaAudio.unlockAudioContext();
                 // ✅ Charger les préférences utilisateur AVANT de lancer la musique
@@ -619,9 +626,14 @@ class CasbahExperience {
     ══════════════════════════════════════════════════════════ */
     _bindEvents() {
         // --- System UI SFX ---
+        // Préchargement du son UI pour éliminer la latence
+        const globalClickSfx = new Audio('/assets/audio/ui/click.mp3');
+        globalClickSfx.volume = 0.6;
+        globalClickSfx.load();
+
         document.querySelectorAll('.c-btn, .c-hud-btn, .c-lang-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                const sfx = new Audio('/assets/audio/ui/click.mp3');
+                const sfx = globalClickSfx.cloneNode();
                 sfx.volume = 0.6;
                 sfx.play().catch(() => { });
             });
@@ -727,7 +739,14 @@ class CasbahExperience {
 
         // --- Time Travel ---
         const ttBtnEl = document.getElementById('btn-time-travel');
-        if (ttBtnEl) ttBtnEl.onclick = () => this._timeTravelToggle();
+        if (ttBtnEl) {
+            ttBtnEl.onclick = () => this._timeTravelToggle();
+            // Prise en charge des écrans tactiles mobiles pour assurer le déclenchement
+            ttBtnEl.addEventListener('touchstart', (e) => {
+                e.preventDefault(); // Empêche l'émulation d'un 'click' fantôme
+                this._timeTravelToggle();
+            }, { passive: false });
+        }
 
         // --- Smart Zoom (double-clic / double-tap) ---
         this._initSmartZoom();
@@ -1468,6 +1487,10 @@ class CasbahExperience {
             if (this.state.mode === 'EDIT') {
                 this._loadPoiToForm(data);
             } else {
+                // Track POI click
+                const poiTitle = data.content?.fr?.title || data.id;
+                Analytics.trackPOIClick(data.id, poiTitle, data.poiType || 'object');
+
                 this._stopVoice();
                 this._closeAllPopups();
 
@@ -1894,6 +1917,7 @@ class CasbahExperience {
         // --- 3. Swap à 600ms (pic du noir total) ---
         setTimeout(() => {
             this.state.isNight = !this.state.isNight;
+            Analytics.trackTimeTravel(this.state.isNight ? 'night' : 'day');
 
             // Mise à jour de UI Editor
             if (this.els.btnEdTime) {

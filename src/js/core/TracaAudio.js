@@ -6,6 +6,8 @@
  * Résout les problèmes de crossfade, de ducking narratif, et la compatibilité iOS.
  */
 
+import { Analytics } from './Analytics.js';
+
 export class TracaAudio {
     constructor() {
         this.basePath = '/assets/audio/';
@@ -62,6 +64,9 @@ export class TracaAudio {
         this.analyser = null;
         this.sourceNode = null;
         this._analyserDataArray = null; // Buffer réutilisable entre les frames
+
+        // Cache pour les SFX afin de réduire la latence
+        this.sfxCache = {};
     }
 
     // ─────────────────────────────────────────────────────────────────
@@ -158,6 +163,7 @@ export class TracaAudio {
         if (this.currentAmbience === filename) return; // Déjà en cours
 
         this.currentAmbience = filename;
+        Analytics.trackAudioPlayback('ambience', 'play', filename);
         // filename peut inclure un sous-dossier (ex: 'day/casbah_day_ambience.mp3')
         this._crossfade(this.channels.ambience, 'ambience', filename, fadeDuration);
     }
@@ -171,6 +177,7 @@ export class TracaAudio {
         if (this.currentMusic === filename) return;
 
         this.currentMusic = filename;
+        Analytics.trackAudioPlayback('music', 'play', filename);
         const targetVol = this.currentNarration ? (this.volumes.music * this.duckingFactor) : this.volumes.music;
         this._crossfade(this.channels.music, 'music', filename, fadeDuration, targetVol);
     }
@@ -186,7 +193,9 @@ export class TracaAudio {
 
         el.src = this.basePath + 'narration/' + filename;
         el.volume = this.volumes.narration;
-        el.play().catch(e => console.warn('Narration bloquée par le nav:', e));
+        el.play()
+            .then(() => { Analytics.trackAudioPlayback('narration', 'play', filename); })
+            .catch(e => console.warn('Narration bloquée par le nav:', e));
 
         // Ducking immédiat (rapide : 1s)
         this._duckMusic();
@@ -195,6 +204,7 @@ export class TracaAudio {
     /**
      * Joue un Effet Sonore court en "Tir/Oublie" (Fire and forget).
      * Accepte un chemin relatif complet (ex: '../ui/click.mp3') ou juste le nom de fichier.
+     * Utilise un cache en mémoire et cloneNode pour une latence minimale.
      */
     playSFX(filename) {
         if (this.isMuted) return;
@@ -202,7 +212,13 @@ export class TracaAudio {
         const src = filename.includes('/')
             ? this.basePath + filename  // ex: /assets/audio/../ui/click.mp3 → résolu par le browser
             : this.basePath + 'sfx/' + filename;
-        const sfx = new Audio(src);
+            
+        if (!this.sfxCache[src]) {
+            this.sfxCache[src] = new Audio(src);
+            this.sfxCache[src].load();
+        }
+        
+        const sfx = this.sfxCache[src].cloneNode();
         sfx.volume = this.volumes.sfx;
         sfx.play().catch(e => console.warn('SFX bloqué:', e));
     }
@@ -243,6 +259,7 @@ export class TracaAudio {
     // ─────────────────────────────────────────────────────────────────
     setVolume(channelName, value) { // value entre 0.0 et 1.0
         this.volumes[channelName] = Math.max(0, Math.min(1, value));
+        Analytics.trackMixerChange(channelName, value);
         // Marquer que l'utilisateur a fait un choix manuel
         this._userOverrideVolume[channelName] = true;
         // Persister le choix utilisateur
@@ -262,6 +279,7 @@ export class TracaAudio {
 
     toggleMute() {
         this.isMuted = !this.isMuted;
+        Analytics.trackAudioMute(this.isMuted, 'hud');
 
         if (this.isMuted) {
             window.gsap.to(this.channels.music, { volume: 0, duration: 1 });
