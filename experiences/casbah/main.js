@@ -315,11 +315,25 @@ class CasbahExperience {
                     '../../assets/images/casbah assasin night.png?v=2.0',
                     (p) => { prog2 = p; updateProgress(); }
                 ),
-                // On inclut explicitement l'image de la carte pour éviter qu'elle soit invisible au 1er rendu de la MapIntro
-                this._loadTextureWithProgress(
-                    '../../assets/images/map.png',
-                    (p) => { prog3 = p; updateProgress(); }
-                )
+                // On inclut explicitement l'image de la carte pour éviter qu'elle soit invisible au 1er rendu de la MapIntro.
+                // On utilise new Image() classique au lieu d'un Blob XHR pour garantir que le cache navigateur
+                // sera partagé avec le background CSS de MapIntro.
+                new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = () => { prog3 = 1; updateProgress(); resolve(); };
+                    img.onerror = resolve;
+                    img.src = '../../assets/images/map.png';
+                }),
+                // On attend que la vidéo du menu principal soit prête à être jouée
+                new Promise((resolve) => {
+                    const vid = document.getElementById('menu-bg-video');
+                    if (!vid || vid.readyState >= 3) {
+                        resolve();
+                    } else {
+                        vid.addEventListener('canplay', resolve, { once: true });
+                        vid.addEventListener('error', resolve, { once: true });
+                    }
+                })
             ]);
 
             this._setProg(100);
@@ -1623,11 +1637,11 @@ class CasbahExperience {
         this._lastTap = 0;
         const canvas = this.renderer.domElement;
 
-        // Zoom cible en FOV
-        const ZOOM_FOV = 5;
-
         const doZoom = (clientX, clientY) => {
             if (this.state.mode !== 'VIEW') return;
+            
+            // Zoom cible en FOV (15% de zoom par rapport à la vue initiale)
+            const targetZoomFov = this.baseFov * 0.85;
 
             // Calcule le point visé par raycast
             const rect = canvas.getBoundingClientRect();
@@ -1662,7 +1676,7 @@ class CasbahExperience {
                 this.controls.update();
 
                 // Zoom FOV
-                this.camera.fov = this.camera.fov + (ZOOM_FOV - this.camera.fov) * ease;
+                this.camera.fov = this.camera.fov + (targetZoomFov - this.camera.fov) * ease;
                 this.camera.updateProjectionMatrix();
                 if (t < 1) this._zoomLerpId = requestAnimationFrame(lerp);
             };
