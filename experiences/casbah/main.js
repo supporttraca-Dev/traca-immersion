@@ -423,13 +423,24 @@ class CasbahExperience {
             xhr.open('GET', url);
             xhr.responseType = 'blob';
 
+            let fakeProgress = 0;
+            let fakeInterval = null;
+
             xhr.onprogress = (e) => {
                 if (e.lengthComputable && onProgress) {
+                    if (fakeInterval) { clearInterval(fakeInterval); fakeInterval = null; }
                     onProgress(e.loaded / e.total);
+                } else if (!fakeInterval && onProgress) {
+                    // Si le serveur Vercel masque le Content-Length (souvent le cas sur mobile / CDN), on simule une avancée.
+                    fakeInterval = setInterval(() => {
+                        fakeProgress += (0.9 - fakeProgress) * 0.05; // monte doucement vers 90%
+                        onProgress(fakeProgress);
+                    }, 200);
                 }
             };
 
             xhr.onload = () => {
+                if (fakeInterval) clearInterval(fakeInterval);
                 if (xhr.status >= 400) {
                     reject(new Error(`HTTP ${xhr.status} — ${url}`));
                     return;
@@ -440,13 +451,17 @@ class CasbahExperience {
                     const tex = new THREE.Texture(img);
                     tex.needsUpdate = true;
                     URL.revokeObjectURL(objectUrl);
+                    if (onProgress) onProgress(1); // Force 100% à la fin
                     resolve(tex);
                 };
                 img.onerror = () => reject(new Error(`Image decode error — ${url}`));
                 img.src = objectUrl;
             };
 
-            xhr.onerror = () => reject(new Error(`Network error — ${url}`));
+            xhr.onerror = () => {
+                if (fakeInterval) clearInterval(fakeInterval);
+                reject(new Error(`Network error — ${url}`));
+            };
             xhr.send();
         });
     }
